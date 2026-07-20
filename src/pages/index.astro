@@ -9,18 +9,20 @@ import SiteFooter from '../components/SiteFooter.astro';
 
 <BaseLayout>
 	<SiteHeader />
-	<main>
-		<Hero />
-		<SectionHeading text="featured projects" />
-		<section class="work">
-			<ProjectCard
-				href="/work/case-study-1"
-				image="/images/case-study-1-cover.png"
-				title="UX Research to evaluate instructional materials"
-				description="Uncovering issues and opportunities in the instructional design of our B2B and B2C technical programs"
-			/>
-		</section>
-	</main>
+	<div class="content">
+		<main>
+			<Hero />
+			<SectionHeading text="featured projects" />
+			<section class="work">
+				<ProjectCard
+					href="/work/case-study-1"
+					image="/images/case-study-1-cover.png"
+					title="UX Research to evaluate instructional materials"
+					description="Uncovering issues and opportunities in the instructional design of our B2B and B2C technical programs"
+				/>
+			</section>
+		</main>
+	</div>
 	<SiteFooter />
 </BaseLayout>
 
