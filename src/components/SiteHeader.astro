@@ -24,7 +24,9 @@
 	.site-header::before {
 		content: '';
 		position: absolute;
-		inset: 0;
+		/* Overhangs the header by one tile on every side so the translate
+		   animation never reveals an edge/gap while it loops. */
+		inset: -29px;
 		opacity: 0.6;
 		background-image:
 			linear-gradient(45deg, var(--color-light-purple) 25%, transparent 25%),
@@ -37,6 +39,20 @@
 			0 15px,
 			15px -15px,
 			-15px 0;
+		will-change: transform;
+		animation: checkerboard-drift 6s linear infinite;
+	}
+
+	@keyframes checkerboard-drift {
+		to {
+			transform: translate(-29px, -29px);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.site-header::before {
+			animation: none;
+		}
 	}
 
 	.logo {
