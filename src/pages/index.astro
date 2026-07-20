@@ -1,12 +1,31 @@
 ---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import Hero from '../components/Hero.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import SiteFooter from '../components/SiteFooter.astro';
 ---
-<!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>sivani.me</title>
-	</head>
-	<body>
-	</body>
-</html>
+
+<BaseLayout>
+	<SiteHeader />
+	<main>
+		<Hero />
+		<SectionHeading text="featured projects" />
+		<section class="work">
+			<ProjectCard
+				href="/work/case-study-1"
+				image="/images/case-study-1-cover.png"
+				title="UX Research to evaluate instructional materials"
+				description="Uncovering issues and opportunities in the instructional design of our B2B and B2C technical programs"
+			/>
+		</section>
+	</main>
+	<SiteFooter />
+</BaseLayout>
+
+<style>
+	.work {
+		padding: 0 var(--space-padding-large) var(--space-padding-large);
+	}
+</style>

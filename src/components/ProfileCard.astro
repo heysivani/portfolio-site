@@ -1,0 +1,212 @@
+---
+import SocialLinks from './SocialLinks.astro';
+
+const abilities = ['blah blah', 'blah blah', 'blah blah'];
+---
+
+<div class="profile-card">
+	<div class="profile-card__header">
+		<p>profile</p>
+	</div>
+	<div class="profile-card__body">
+		<div class="profile-row">
+			<div class="photo">
+				<img src="/images/profile.png" alt="Portrait of Sivani" width="145" height="138" />
+			</div>
+			<div class="stats">
+				<div class="stats__info">
+					<div class="stat">
+						<img src="/icons/skull.svg" alt="" width="15" height="14" />
+						<span>lvl ???</span>
+					</div>
+					<div class="stat">
+						<img src="/icons/location.svg" alt="" width="12" height="15" />
+						<span>tokyo</span>
+					</div>
+				</div>
+				<div class="abilities">
+					<p class="abilities__label">abilities</p>
+					<ul>
+						{
+							abilities.map((ability) => (
+								<li>
+									<img src="/icons/arrow.svg" alt="" width="15" height="13" />
+									<span>{ability}</span>
+								</li>
+							))
+						}
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<div class="bars">
+			<div class="bar-row">
+				<span class="bar-label">hp</span>
+				<div class="bar bar--hp"></div>
+			</div>
+			<div class="bar-row">
+				<span class="bar-label">xp</span>
+				<div class="bar bar--xp"></div>
+			</div>
+		</div>
+
+		<p class="bio-text">
+			Full-stack UX + UI product designer powered by a game design degree and a background in coding and ed tech. Values
+			data-driven decisions, clarity, and kindness. Writer of an award-nominated game that has been exhibited worldwide.
+		</p>
+
+		<SocialLinks />
+	</div>
+</div>
+
+<style>
+	.profile-card {
+		width: 100%;
+		background-color: var(--color-light-purple);
+		border: 1px solid var(--color-dark-gray);
+		border-radius: 5px;
+	}
+
+	.profile-card__header {
+		padding: var(--space-medium) var(--space-padding-medium);
+		border-bottom: 1px solid var(--color-dark-gray);
+	}
+
+	.profile-card__header p {
+		font-family: var(--font-display);
+		font-size: var(--text-h3);
+		font-weight: 400;
+	}
+
+	.profile-card__body {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-medium);
+		background-color: var(--color-cream);
+		border-radius: 0 0 5px 5px;
+		padding: var(--space-padding-medium);
+	}
+
+	.profile-row {
+		display: flex;
+		gap: var(--space-large);
+		padding-bottom: var(--space-micro);
+	}
+
+	.photo {
+		flex-shrink: 0;
+		width: 145px;
+		height: 138px;
+		border: 1px solid var(--color-dark-gray);
+		border-radius: 5px;
+		background-color: var(--color-light-purple);
+		overflow: hidden;
+	}
+
+	.photo img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.stats {
+		flex: 1;
+		min-width: 0;
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-medium);
+		justify-content: center;
+	}
+
+	.stats__info {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-micro);
+	}
+
+	.stat {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		font-size: var(--text-micro);
+		color: var(--color-light-grey);
+	}
+
+	.stat img {
+		flex-shrink: 0;
+	}
+
+	.abilities {
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+		padding-bottom: var(--space-small);
+	}
+
+	.abilities__label {
+		font-size: var(--text-micro);
+		font-weight: 700;
+		color: var(--color-light-grey);
+	}
+
+	.abilities ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+	}
+
+	.abilities li {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		font-size: var(--text-micro);
+		color: var(--color-light-grey);
+	}
+
+	.abilities li img {
+		flex-shrink: 0;
+		transform: rotate(90deg);
+	}
+
+	.bars {
+		display: flex;
+		flex-direction: column;
+		gap: 3px;
+	}
+
+	.bar-row {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	.bar-label {
+		flex-shrink: 0;
+		width: 15px;
+		font-size: var(--text-micro);
+		color: var(--color-light-grey);
+	}
+
+	.bar {
+		flex: 1;
+		height: 7px;
+		border-radius: 5px;
+	}
+
+	.bar--hp {
+		background-color: var(--color-medium-green);
+	}
+
+	.bar--xp {
+		background-color: var(--color-medium-purple);
+	}
+
+	.bio-text {
+		font-size: var(--text-body);
+		line-height: 1.5;
+	}
+</style>

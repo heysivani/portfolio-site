@@ -1,0 +1,25 @@
+---
+import SocialLinks from './SocialLinks.astro';
+---
+
+<footer class="site-footer">
+	<SocialLinks />
+	<p>designed and built by sivani</p>
+</footer>
+
+<style>
+	.site-footer {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: var(--space-medium);
+		padding: var(--space-padding-large);
+		background-color: var(--color-light-purple);
+	}
+
+	.site-footer p {
+		font-size: var(--text-micro);
+		color: var(--color-light-grey);
+		text-align: center;
+	}
+</style>

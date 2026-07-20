@@ -1,0 +1,47 @@
+---
+import ProfileCard from './ProfileCard.astro';
+---
+
+<section class="hero">
+	<div class="headline">
+		<h1>
+			hi! i'm sivani <span class="pronunciation">/shi-vah-nee/</span><br />
+			<span class="romaji">シバーニ</span>
+			designer, writer, and developer
+		</h1>
+	</div>
+
+	<ProfileCard />
+</section>
+
+<style>
+	.hero {
+		display: flex;
+		flex-direction: column;
+		padding: var(--space-padding-large);
+		gap: var(--space-padding-large);
+	}
+
+	.headline h1 {
+		margin: 0;
+		font-family: var(--font-display);
+		font-size: var(--text-h1);
+		font-weight: 500;
+		line-height: 1.4;
+	}
+
+	.pronunciation {
+		font-family: var(--font-body);
+		font-size: var(--text-micro);
+		font-weight: 400;
+		color: var(--color-light-grey);
+		vertical-align: middle;
+	}
+
+	.romaji {
+		display: block;
+		font-size: 9px;
+		font-weight: 400;
+		color: var(--color-light-grey);
+	}
+</style>
