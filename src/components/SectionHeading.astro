@@ -4,16 +4,83 @@ interface Props {
 }
 
 const { text } = Astro.props;
+const triangles = [0, 1, 2];
 ---
 
 <div class="section-heading">
-	<img class="marker marker--left" src="/icons/triangles.svg" alt="" width="12" height="49" />
+	<div class="marker-group marker-group--left">
+		{
+			triangles.map(() => (
+				<svg class="marker" viewBox="0 0 11.681 13.0863" width="12" height="13" xmlns="http://www.w3.org/2000/svg">
+					<path d="M4.67995 12.3252C5.11947 13.3398 6.55822 13.34 6.99798 12.3255L11.5754 1.76554C11.937 0.93144 11.3256 0 10.4165 0H5.84076H1.26454C0.355578 0 -0.25585 0.931198 0.105459 1.76526L4.67995 12.3252Z" />
+				</svg>
+			))
+		}
+	</div>
 	<h2>{text}</h2>
-	<img class="marker marker--right" src="/icons/triangles.svg" alt="" width="12" height="49" />
+	<div class="marker-group marker-group--right">
+		{
+			triangles.map(() => (
+				<svg class="marker" viewBox="0 0 11.681 13.0863" width="12" height="13" xmlns="http://www.w3.org/2000/svg">
+					<path d="M4.67995 12.3252C5.11947 13.3398 6.55822 13.34 6.99798 12.3255L11.5754 1.76554C11.937 0.93144 11.3256 0 10.4165 0H5.84076H1.26454C0.355578 0 -0.25585 0.931198 0.105459 1.76526L4.67995 12.3252Z" />
+				</svg>
+			))
+		}
+	</div>
 </div>
+
+<script>
+	const heading = document.querySelector('.section-heading');
+
+	if (heading instanceof HTMLElement && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+		let ticking = false;
+		let startDistance = 0;
+		let triggerDistance = 1;
+
+		// light-green -> medium-green, matching --color-light-green / --color-medium-green
+		const fromColor = [213, 238, 216];
+		const toColor = [83, 196, 156];
+
+		const measure = () => {
+			// Wait until the user has scrolled a fifth of a viewport before the
+			// rotation/color animation starts, then ramp over the usual distance.
+			startDistance = window.innerHeight * 0.2;
+			triggerDistance = Math.max(window.innerHeight * 0.6 - startDistance, 1);
+		};
+
+		const updateProgress = () => {
+			const progress = Math.max(0, Math.min(1, (window.scrollY - startDistance) / triggerDistance));
+			heading.style.setProperty('--arrow-progress', progress.toFixed(3));
+
+			const [r, g, b] = fromColor.map((from, i) => Math.round(from + (toColor[i] - from) * progress));
+			heading.style.setProperty('--arrow-color', `rgb(${r}, ${g}, ${b})`);
+
+			ticking = false;
+		};
+
+		const onScroll = () => {
+			if (!ticking) {
+				window.requestAnimationFrame(updateProgress);
+				ticking = true;
+			}
+		};
+
+		const onResize = () => {
+			measure();
+			updateProgress();
+		};
+
+		measure();
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onResize);
+		updateProgress();
+	}
+</script>
 
 <style>
 	.section-heading {
+		--arrow-progress: 1;
+		--arrow-color: var(--color-medium-green);
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -30,7 +97,30 @@ const { text } = Astro.props;
 		font-weight: 500;
 	}
 
-	.marker {
+	.marker-group {
 		flex-shrink: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 5px;
+	}
+
+	.marker {
+		display: block;
+		will-change: transform;
+	}
+
+	.marker path {
+		fill: var(--arrow-color);
+	}
+
+	/* Base orientation of the SVG points down; rotate each triangle from a
+	   horizontal starting position toward 0deg (down) as the section scrolls
+	   into view. */
+	.marker-group--left .marker {
+		transform: rotate(calc(-90deg + var(--arrow-progress) * 90deg));
+	}
+
+	.marker-group--right .marker {
+		transform: rotate(calc(90deg - var(--arrow-progress) * 90deg));
 	}
 </style>
