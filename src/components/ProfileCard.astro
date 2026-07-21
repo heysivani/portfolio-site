@@ -30,7 +30,9 @@ const abilities = ['blah blah', 'blah blah', 'blah blah'];
 						{
 							abilities.map((ability) => (
 								<li>
-									<img src="/icons/arrow.svg" alt="" width="15" height="13" />
+									<svg class="ability-marker" viewBox="0 0 11.681 13.0863" width="15" height="13" xmlns="http://www.w3.org/2000/svg">
+										<path d="M4.67995 12.3252C5.11947 13.3398 6.55822 13.34 6.99798 12.3255L11.5754 1.76554C11.937 0.93144 11.3256 0 10.4165 0H5.84076H1.26454C0.355578 0 -0.25585 0.931198 0.105459 1.76526L4.67995 12.3252Z" />
+									</svg>
 									<span>{ability}</span>
 								</li>
 							))
@@ -59,6 +61,56 @@ const abilities = ['blah blah', 'blah blah', 'blah blah'];
 		<SocialLinks />
 	</div>
 </div>
+
+<script>
+	const abilities = document.querySelector('.abilities');
+
+	if (abilities instanceof HTMLElement && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+		let ticking = false;
+		let triggerLine = 0;
+		let rampDistance = 1;
+
+		// medium-green -> light-green, matching --color-medium-green / --color-light-green
+		const fromColor = [83, 196, 156];
+		const toColor = [213, 238, 216];
+
+		const measure = () => {
+			// Animation doesn't start until the triangles have scrolled up past a
+			// line 3/5 of the way up the viewport (i.e. 2/5 down from the top),
+			// then ramps over the next couple fifths of scrolling.
+			triggerLine = window.innerHeight * 0.4;
+			rampDistance = Math.max(window.innerHeight * 0.4, 1);
+		};
+
+		const updateProgress = () => {
+			const rect = abilities.getBoundingClientRect();
+			const progress = Math.max(0, Math.min(1, (triggerLine - rect.top) / rampDistance));
+			abilities.style.setProperty('--ability-progress', progress.toFixed(3));
+
+			const [r, g, b] = fromColor.map((from, i) => Math.round(from + (toColor[i] - from) * progress));
+			abilities.style.setProperty('--ability-color', `rgb(${r}, ${g}, ${b})`);
+
+			ticking = false;
+		};
+
+		const onScroll = () => {
+			if (!ticking) {
+				window.requestAnimationFrame(updateProgress);
+				ticking = true;
+			}
+		};
+
+		const onResize = () => {
+			measure();
+			updateProgress();
+		};
+
+		measure();
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onResize);
+		updateProgress();
+	}
+</script>
 
 <style>
 	.profile-card {
@@ -143,6 +195,8 @@ const abilities = ['blah blah', 'blah blah', 'blah blah'];
 	}
 
 	.abilities {
+		--ability-progress: 1;
+		--ability-color: var(--color-light-green);
 		display: flex;
 		flex-direction: column;
 		gap: 6px;
@@ -172,9 +226,15 @@ const abilities = ['blah blah', 'blah blah', 'blah blah'];
 		color: var(--color-light-grey);
 	}
 
-	.abilities li img {
+	.ability-marker {
 		flex-shrink: 0;
-		transform: rotate(-90deg);
+		display: block;
+		will-change: transform;
+		transform: rotate(calc(-90deg + var(--ability-progress) * 90deg));
+	}
+
+	.ability-marker path {
+		fill: var(--ability-color);
 	}
 
 	.bars {
