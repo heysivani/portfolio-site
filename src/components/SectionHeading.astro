@@ -34,22 +34,29 @@ const triangles = [0, 1, 2];
 
 	if (heading instanceof HTMLElement && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
 		let ticking = false;
-		let startDistance = 0;
-		let triggerDistance = 1;
+		let triggerLine = 0;
+		let rampDistance = 1;
 
 		// light-green -> medium-green, matching --color-light-green / --color-medium-green
 		const fromColor = [213, 238, 216];
 		const toColor = [83, 196, 156];
 
 		const measure = () => {
-			// Wait until the user has scrolled a fifth of a viewport before the
-			// rotation/color animation starts, then ramp over the usual distance.
-			startDistance = window.innerHeight * 0.2;
-			triggerDistance = Math.max(window.innerHeight * 0.6 - startDistance, 1);
+			// Tracks the element's actual position in the viewport (not raw scroll
+			// distance) so this can't start before it's actually visible on any
+			// screen size. Progress stays 0 until the heading's top has scrolled up
+			// past a line 80% down the viewport (i.e. a bit after it first enters
+			// from the bottom), then ramps over the next ~0.6 viewport-heights.
+			triggerLine = window.innerHeight * 0.8;
+			rampDistance = Math.max(window.innerHeight * 0.6, 1);
 		};
 
 		const updateProgress = () => {
-			const progress = Math.max(0, Math.min(1, (window.scrollY - startDistance) / triggerDistance));
+			// Also require actual scrolling to have happened, so a viewport tall
+			// enough to fit the whole page can't show progress before any
+			// interaction, even if the element's position would otherwise say so.
+			const rect = heading.getBoundingClientRect();
+			const progress = window.scrollY <= 0 ? 0 : Math.max(0, Math.min(1, (triggerLine - rect.top) / rampDistance));
 			heading.style.setProperty('--arrow-progress', progress.toFixed(3));
 
 			const [r, g, b] = fromColor.map((from, i) => Math.round(from + (toColor[i] - from) * progress));
