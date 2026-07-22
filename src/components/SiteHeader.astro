@@ -2,7 +2,9 @@
 ---
 
 <header class="site-header">
-	<img class="logo" src="/images/logo.svg" alt="sivani" width="152" height="41" />
+	<a class="logo-link" href="/" aria-label="Go to home page">
+		<img class="logo" src="/images/logo.svg" alt="sivani" width="152" height="41" />
+	</a>
 </header>
 
 <style>
@@ -55,8 +57,13 @@
 		}
 	}
 
-	.logo {
+	.logo-link {
 		position: relative;
+		display: inline-flex;
+	}
+
+	.logo {
+		display: block;
 		height: 41px;
 		width: auto;
 	}
