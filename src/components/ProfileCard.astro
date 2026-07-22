@@ -1,12 +1,12 @@
 ---
 import SocialLinks from './SocialLinks.astro';
 
-const abilities = ['blah blah', 'blah blah', 'blah blah'];
+const abilities = ['UX research', 'UI design', 'Coding'];
 ---
 
 <div class="profile-card">
 	<div class="profile-card__header">
-		<p>profile</p>
+		<p>Profile</p>
 	</div>
 	<div class="profile-card__body">
 		<div class="profile-row">
@@ -17,15 +17,15 @@ const abilities = ['blah blah', 'blah blah', 'blah blah'];
 				<div class="stats__info">
 					<div class="stat">
 						<img src="/icons/skull.svg" alt="" width="15" height="14" />
-						<span>lvl ???</span>
+						<span>Level unknown</span>
 					</div>
 					<div class="stat">
 						<img src="/icons/location.svg" alt="" width="12" height="15" />
-						<span>tokyo</span>
+						<span>Tokyo</span>
 					</div>
 				</div>
 				<div class="abilities">
-					<p class="abilities__label">abilities</p>
+					<p class="abilities__label">Special abilities</p>
 					<ul>
 						{
 							abilities.map((ability) => (
@@ -44,11 +44,11 @@ const abilities = ['blah blah', 'blah blah', 'blah blah'];
 
 		<div class="bars">
 			<div class="bar-row">
-				<span class="bar-label">hp</span>
+				<span class="bar-label">HP</span>
 				<div class="bar bar--hp"></div>
 			</div>
 			<div class="bar-row">
-				<span class="bar-label">xp</span>
+				<span class="bar-label">XP</span>
 				<div class="bar bar--xp"></div>
 			</div>
 		</div>
