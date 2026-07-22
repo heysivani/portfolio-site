@@ -86,8 +86,8 @@ const triangles = [0, 1, 2];
 
 <style>
 	.section-heading {
-		--arrow-progress: 1;
-		--arrow-color: var(--color-medium-green);
+		--arrow-progress: 0;
+		--arrow-color: var(--color-light-green);
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -129,5 +129,12 @@ const triangles = [0, 1, 2];
 
 	.marker-group--right .marker {
 		transform: rotate(calc(90deg - var(--arrow-progress) * 90deg));
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.section-heading {
+			--arrow-progress: 1;
+			--arrow-color: var(--color-medium-green);
+		}
 	}
 </style>
