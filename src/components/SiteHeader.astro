@@ -72,17 +72,20 @@
 		   animation never reveals an edge/gap while it loops. */
 		inset: -29px;
 		opacity: 0.6;
-		background-image:
-			linear-gradient(45deg, var(--color-light-purple) 25%, transparent 25%),
-			linear-gradient(-45deg, var(--color-light-purple) 25%, transparent 25%),
-			linear-gradient(45deg, transparent 75%, var(--color-light-purple) 75%),
-			linear-gradient(-45deg, transparent 75%, var(--color-light-purple) 75%);
+		/* A single tiled checkerboard unit (two diagonal squares per tile), not
+		   4 stacked/overlapping gradients: with multiple independently-
+		   anti-aliased gradient layers, fractional zoom levels or display
+		   scaling could round each layer's edge to the pixel grid slightly
+		   differently, leaving a hairline seam between them. One repeating
+		   vector tile has nothing to misalign against.
+		   The two squares are each half the tile, positioned in opposite
+		   corners, so same-color squares meet at a single point on the
+		   diagonal (classic checkerboard) and the transparent gaps between
+		   them read as same-size squares.
+		   Fill color must be kept in sync with --color-light-purple (CSS custom
+		   properties aren't visible inside a data-URI'd SVG). */
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='29' height='29' viewBox='0 0 29 29'%3E%3Crect x='0' y='0' width='14.5' height='14.5' fill='%23F5E5FF'/%3E%3Crect x='14.5' y='14.5' width='14.5' height='14.5' fill='%23F5E5FF'/%3E%3C/svg%3E");
 		background-size: 29px 29px;
-		background-position:
-			0 0,
-			0 15px,
-			15px -15px,
-			-15px 0;
 		will-change: transform;
 		animation: checkerboard-drift 6s linear infinite;
 	}
@@ -146,11 +149,6 @@
 		.site-header::before {
 			inset: -35px;
 			background-size: 35px 35px;
-			background-position:
-				0 0,
-				0 17.5px,
-				17.5px -17.5px,
-				-17.5px 0;
 			animation-name: checkerboard-drift-tablet;
 		}
 
@@ -174,11 +172,6 @@
 		.site-header::before {
 			inset: -40px;
 			background-size: 40px 40px;
-			background-position:
-				0 0,
-				0 20px,
-				20px -20px,
-				-20px 0;
 			animation-name: checkerboard-drift-desktop;
 		}
 
