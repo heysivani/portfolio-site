@@ -58,7 +58,7 @@ const abilities = ['UX research', 'UI design', 'Coding'];
 			data-driven decisions, clarity, and kindness. Writer of an award-nominated game that has been exhibited worldwide.
 		</p>
 
-		<SocialLinks />
+		<SocialLinks animate startDelay={0} />
 	</div>
 </div>
 
@@ -159,6 +159,7 @@ const abilities = ['UX research', 'UI design', 'Coding'];
 		border-radius: 5px;
 		background-color: var(--color-light-purple);
 		overflow: hidden;
+		animation: pop-in 0.5s ease-out both;
 	}
 
 	.photo img {
@@ -191,6 +192,15 @@ const abilities = ['UX research', 'UI design', 'Coding'];
 		gap: 6px;
 		font-size: var(--text-micro);
 		color: var(--color-light-grey);
+		animation: pop-in 0.5s ease-out both;
+	}
+
+	.stat:nth-child(1) {
+		animation-delay: 0s;
+	}
+
+	.stat:nth-child(2) {
+		animation-delay: 0.08s;
 	}
 
 	.stat img {
@@ -210,6 +220,8 @@ const abilities = ['UX research', 'UI design', 'Coding'];
 		font-size: var(--text-micro);
 		font-weight: 700;
 		color: var(--color-light-grey);
+		animation: pop-in 0.5s ease-out both;
+		animation-delay: 0.16s;
 	}
 
 	.abilities ul {
@@ -227,6 +239,45 @@ const abilities = ['UX research', 'UI design', 'Coding'];
 		gap: 6px;
 		font-size: var(--text-micro);
 		color: var(--color-light-grey);
+		animation: pop-in 0.5s ease-out both;
+	}
+
+	.abilities li:nth-child(1) {
+		animation-delay: 0.24s;
+	}
+
+	.abilities li:nth-child(2) {
+		animation-delay: 0.32s;
+	}
+
+	.abilities li:nth-child(3) {
+		animation-delay: 0.4s;
+	}
+
+	@keyframes pop-in {
+		0% {
+			opacity: 0;
+			transform: scale(0.9);
+		}
+		60% {
+			opacity: 1;
+			transform: scale(1.05);
+		}
+		100% {
+			opacity: 1;
+			transform: scale(1);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.photo,
+		.stat,
+		.abilities__label,
+		.abilities li,
+		.bar-label,
+		.bio-text {
+			animation: none;
+		}
 	}
 
 	.ability-marker {
@@ -257,6 +308,15 @@ const abilities = ['UX research', 'UI design', 'Coding'];
 		width: 15px;
 		font-size: var(--text-micro);
 		color: var(--color-light-grey);
+		animation: pop-in 0.5s ease-out both;
+	}
+
+	.bar-row:nth-child(1) .bar-label {
+		animation-delay: 0s;
+	}
+
+	.bar-row:nth-child(2) .bar-label {
+		animation-delay: 0.08s;
 	}
 
 	.bar {
@@ -291,14 +351,34 @@ const abilities = ['UX research', 'UI design', 'Coding'];
 
 	.bar--hp {
 		background-color: var(--color-medium-green);
+		/* Starts once the "HP" label's own pop-in (0s delay + 0.5s duration)
+		   has finished settling. */
+		animation-delay: 0.5s;
 	}
 
 	.bar--xp {
 		background-color: var(--color-medium-purple);
+		/* Starts once the "XP" label's own pop-in (0.08s delay + 0.5s duration)
+		   has finished settling. */
+		animation-delay: 0.58s;
 	}
 
 	.bio-text {
 		font-size: var(--text-body);
 		line-height: 1.5;
+		animation: fade-in-scale 0.9s ease-out both;
+		/* Starts alongside the level/skull row. */
+		animation-delay: 0s;
+	}
+
+	@keyframes fade-in-scale {
+		from {
+			opacity: 0;
+			transform: scale(0.95);
+		}
+		to {
+			opacity: 1;
+			transform: scale(1);
+		}
 	}
 </style>

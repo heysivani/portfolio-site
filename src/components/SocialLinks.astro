@@ -1,4 +1,11 @@
 ---
+interface Props {
+	animate?: boolean;
+	startDelay?: number;
+}
+
+const { animate = false, startDelay = 0 } = Astro.props;
+
 const links = [
 	{ href: 'mailto:chatwithsivani@gmail.com', label: 'Email', icon: '/icons/mail.svg', size: 25 },
 	{ href: 'https://www.linkedin.com/in/heysivani/', label: 'LinkedIn', icon: '/icons/linkedin.svg', size: 20 },
@@ -6,10 +13,10 @@ const links = [
 ];
 ---
 
-<ul class="social-links">
+<ul class:list={['social-links', { 'social-links--animated': animate }]}>
 	{
-		links.map((link) => (
-			<li>
+		links.map((link, i) => (
+			<li style={animate ? { animationDelay: `${(startDelay + i * 0.08).toFixed(2)}s` } : undefined}>
 				<a href={link.href} aria-label={link.label} target={link.href.startsWith('http') ? '_blank' : undefined} rel={link.href.startsWith('http') ? 'noreferrer' : undefined}>
 					<img src={link.icon} alt="" width={link.size} height={link.size} />
 				</a>
@@ -33,5 +40,30 @@ const links = [
 	.social-links a {
 		display: block;
 		line-height: 0;
+	}
+
+	.social-links--animated li {
+		animation: pop-in 0.5s ease-out both;
+	}
+
+	@keyframes pop-in {
+		0% {
+			opacity: 0;
+			transform: scale(0.9);
+		}
+		60% {
+			opacity: 1;
+			transform: scale(1.05);
+		}
+		100% {
+			opacity: 1;
+			transform: scale(1);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.social-links--animated li {
+			animation: none;
+		}
 	}
 </style>
