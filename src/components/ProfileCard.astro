@@ -11,7 +11,9 @@ const abilities = ['UX research', 'UI design', 'Coding'];
 	<div class="profile-card__body">
 		<div class="profile-row">
 			<div class="photo">
-				<img src="/images/profile.png" alt="Portrait of Sivani" width="145" height="138" />
+				<div class="photo__frame">
+					<img src="/images/profile.png" alt="Portrait of Sivani" width="145" height="138" draggable="false" />
+				</div>
 			</div>
 			<div class="stats">
 				<div class="stats__info">
@@ -113,6 +115,33 @@ const abilities = ['UX research', 'UI design', 'Coding'];
 		window.addEventListener('resize', onResize);
 		updateProgress();
 	}
+
+	const photo = document.querySelector('.photo');
+	const photoFrame = photo instanceof HTMLElement ? photo.querySelector('.photo__frame') : null;
+
+	if (photoFrame instanceof HTMLElement && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+		// Animates .photo__frame (the bordered/filled rectangle plus the image
+		// inside it), not .photo itself — .photo already has its own load-in
+		// "pop-in" animation, and toggling a class that swaps which rule's
+		// `animation` shorthand applies would restart THAT animation too (the
+		// same trick used to restart this one) every time this one ends.
+		const trigger = () => {
+			// Restart from scratch even on rapid re-triggers, and let it keep
+			// playing to completion regardless (it's not tied to a hover state).
+			photoFrame.classList.remove('is-active');
+			void photoFrame.getBoundingClientRect();
+			photoFrame.classList.add('is-active');
+		};
+
+		// pointerenter covers mouse hover; click covers tap on touch devices
+		// (and also mouse clicks, which just restart the same effect).
+		photoFrame.addEventListener('pointerenter', trigger);
+		photoFrame.addEventListener('click', trigger);
+
+		photoFrame.addEventListener('animationend', () => {
+			photoFrame.classList.remove('is-active');
+		});
+	}
 </script>
 
 <style>
@@ -155,10 +184,6 @@ const abilities = ['UX research', 'UI design', 'Coding'];
 		flex-shrink: 0;
 		width: 145px;
 		height: 138px;
-		border: 1px solid var(--color-dark-gray);
-		border-radius: 5px;
-		background-color: var(--color-light-purple);
-		overflow: hidden;
 		animation: pop-in 0.5s ease-out both;
 	}
 
@@ -179,6 +204,17 @@ const abilities = ['UX research', 'UI design', 'Coding'];
 		}
 	}
 
+	.photo__frame {
+		position: relative;
+		width: 100%;
+		height: 100%;
+		border: 1px solid var(--color-dark-gray);
+		border-radius: 5px;
+		background-color: var(--color-light-purple);
+		overflow: hidden;
+		cursor: pointer;
+	}
+
 	.photo img {
 		position: absolute;
 		width: 262.51%;
@@ -186,6 +222,37 @@ const abilities = ['UX research', 'UI design', 'Coding'];
 		max-width: none;
 		left: -23.17%;
 		top: -19.15%;
+	}
+
+	.photo__frame.is-active {
+		animation: photo-squash-stretch 0.5s ease-in-out;
+	}
+
+	@keyframes photo-squash-stretch {
+		0% {
+			transform: scale(1, 1);
+		}
+		25% {
+			transform: scale(1.04, 0.97);
+		}
+		50% {
+			transform: scale(0.975, 1.035);
+		}
+		70% {
+			transform: scale(1.015, 0.99);
+		}
+		85% {
+			transform: scale(0.995, 1.005);
+		}
+		100% {
+			transform: scale(1, 1);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.photo__frame.is-active {
+			animation: none;
+		}
 	}
 
 	.stats {
