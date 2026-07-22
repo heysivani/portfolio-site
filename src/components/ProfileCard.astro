@@ -198,8 +198,8 @@ const abilities = ['UX research', 'UI design', 'Coding'];
 	}
 
 	.abilities {
-		--ability-progress: 1;
-		--ability-color: var(--color-light-green);
+		--ability-progress: 0;
+		--ability-color: var(--color-medium-green);
 		display: flex;
 		flex-direction: column;
 		gap: 6px;
@@ -263,6 +263,30 @@ const abilities = ['UX research', 'UI design', 'Coding'];
 		flex: 1;
 		height: 7px;
 		border-radius: 5px;
+		transform: scaleX(0);
+		transform-origin: left;
+		opacity: 0.35;
+		animation: bar-fill 1s ease-out forwards;
+	}
+
+	@keyframes bar-fill {
+		to {
+			transform: scaleX(1);
+			opacity: 1;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.bar {
+			animation: none;
+			transform: scaleX(1);
+			opacity: 1;
+		}
+
+		.abilities {
+			--ability-progress: 1;
+			--ability-color: var(--color-light-green);
+		}
 	}
 
 	.bar--hp {
