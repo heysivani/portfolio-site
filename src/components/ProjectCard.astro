@@ -29,14 +29,44 @@ const { href, image, title, description, skills } = Astro.props;
 <style>
 	.project-card {
 		display: block;
+		position: relative;
 		border: 1px solid var(--color-dark-gray);
 		border-radius: 5px;
 		box-shadow: 0 8px 16px rgba(124, 112, 132, 0.12);
 		text-decoration: none;
 		color: inherit;
+		transform: scale(1);
+		transition: transform 0.2s ease-out;
+	}
+
+	.project-card::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		border-radius: 5px;
+		background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 20.967%, rgba(245, 229, 255, 0.6) 101.42%);
+		opacity: 0;
+		transition: opacity 0.2s ease-out;
+		pointer-events: none;
+	}
+
+	.project-card:hover {
+		transform: scale(1.02);
+	}
+
+	.project-card:hover::before {
+		opacity: 1;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.project-card,
+		.project-card::before {
+			transition: none;
+		}
 	}
 
 	.project-card__body {
+		position: relative;
 		padding: var(--space-padding-medium);
 	}
 
@@ -88,6 +118,7 @@ const { href, image, title, description, skills } = Astro.props;
 	}
 
 	.project-card__cta {
+		position: relative;
 		display: flex;
 		align-items: center;
 		justify-content: center;
