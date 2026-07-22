@@ -17,13 +17,35 @@ const links = [
 	{
 		links.map((link, i) => (
 			<li style={animate ? { animationDelay: `${(startDelay + i * 0.08).toFixed(2)}s` } : undefined}>
-				<a href={link.href} aria-label={link.label} target={link.href.startsWith('http') ? '_blank' : undefined} rel={link.href.startsWith('http') ? 'noreferrer' : undefined}>
+				<a class="social-links__link" href={link.href} aria-label={link.label} target={link.href.startsWith('http') ? '_blank' : undefined} rel={link.href.startsWith('http') ? 'noreferrer' : undefined}>
 					<img src={link.icon} alt="" width={link.size} height={link.size} />
 				</a>
 			</li>
 		))
 	}
 </ul>
+
+<script>
+	const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+	if (!reduceMotion) {
+		const icons = document.querySelectorAll('.social-links__link');
+
+		icons.forEach((icon) => {
+			icon.addEventListener('pointerenter', () => {
+				// Restart from scratch even if already mid-animation, and let it
+				// keep playing after the pointer leaves (it's not tied to :hover).
+				icon.classList.remove('is-hovering');
+				void icon.getBoundingClientRect();
+				icon.classList.add('is-hovering');
+			});
+
+			icon.addEventListener('animationend', () => {
+				icon.classList.remove('is-hovering');
+			});
+		});
+	}
+</script>
 
 <style>
 	.social-links {
@@ -61,8 +83,37 @@ const links = [
 		}
 	}
 
+	.social-links__link.is-hovering {
+		animation: icon-squash-stretch 0.5s ease-in-out;
+	}
+
+	@keyframes icon-squash-stretch {
+		0% {
+			transform: scale(1, 1);
+		}
+		25% {
+			transform: scale(1.08, 0.94);
+		}
+		50% {
+			transform: scale(0.95, 1.07);
+		}
+		70% {
+			transform: scale(1.03, 0.98);
+		}
+		85% {
+			transform: scale(0.99, 1.01);
+		}
+		100% {
+			transform: scale(1, 1);
+		}
+	}
+
 	@media (prefers-reduced-motion: reduce) {
 		.social-links--animated li {
+			animation: none;
+		}
+
+		.social-links__link.is-hovering {
 			animation: none;
 		}
 	}
