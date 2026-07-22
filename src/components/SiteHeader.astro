@@ -2,6 +2,9 @@
 ---
 
 <header class="site-header">
+	<div class="site-header__pattern-wrap">
+		<div class="site-header__pattern"></div>
+	</div>
 	<a class="logo-link" href="/" aria-label="Go to home page">
 		<svg class="logo" preserveAspectRatio="none" overflow="visible" viewBox="0 0 151.861 40.528" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
 			<g class="logo-shape">
@@ -61,18 +64,39 @@
 		top: 0;
 		z-index: 10;
 		overflow: hidden;
-		background-color: var(--color-cream);
-		border-bottom: 3px solid var(--color-light-purple);
 	}
 
-	.site-header::before {
-		content: '';
+	.site-header__pattern-wrap {
 		position: absolute;
-		/* Overhangs the header by one tile on every side so the translate
+		inset: 0;
+		overflow: hidden;
+		/* Fades the pattern into the header's own cream background (which
+		   matches the page background) near the bottom edge, instead of a
+		   hard border. This wrapper itself is never animated/transformed —
+		   only .site-header__pattern inside it drifts — so the fade stays
+		   fixed relative to the header's real edges instead of visibly
+		   shifting (and snapping, once per loop) along with the pattern.
+		   Percentages are relative to the header's real height (no
+		   oversizing to account for), so they're exact and identical at
+		   every breakpoint. The fade starts late so the pattern stays fully
+		   visible below the logo, only fading in a short stretch right at
+		   the bottom edge. */
+		mask-image: linear-gradient(to bottom, black 78%, transparent 100%);
+		-webkit-mask-image: linear-gradient(to bottom, black 78%, transparent 100%);
+	}
+
+	.site-header__pattern {
+		position: absolute;
+		/* Overhangs the wrapper by one tile on every side so the translate
 		   animation never reveals an edge/gap while it loops. */
 		inset: -29px;
-		opacity: 0.6;
-		/* A single tiled checkerboard unit (two diagonal squares per tile), not
+		/* Cream fill lives here (not on .site-header) so the mask above can
+		   fade the WHOLE background — fill and pattern together — to fully
+		   transparent near the bottom, instead of just the pattern sitting
+		   on top of a permanently-opaque header box. That way content
+		   scrolling underneath the sticky header fades out softly instead
+		   of being clipped by a hard cream edge.
+		   A single tiled checkerboard unit (two diagonal squares per tile), not
 		   4 stacked/overlapping gradients: with multiple independently-
 		   anti-aliased gradient layers, fractional zoom levels or display
 		   scaling could round each layer's edge to the pixel grid slightly
@@ -81,10 +105,13 @@
 		   The two squares are each half the tile, positioned in opposite
 		   corners, so same-color squares meet at a single point on the
 		   diagonal (classic checkerboard) and the transparent gaps between
-		   them read as same-size squares.
+		   them read as same-size squares. Their fill-opacity (rather than an
+		   element-level opacity) keeps the pattern's softened look
+		   independent of the wrapper's fade-to-transparent mask.
 		   Fill color must be kept in sync with --color-light-purple (CSS custom
 		   properties aren't visible inside a data-URI'd SVG). */
-		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='29' height='29' viewBox='0 0 29 29'%3E%3Crect x='0' y='0' width='14.5' height='14.5' fill='%23F5E5FF'/%3E%3Crect x='14.5' y='14.5' width='14.5' height='14.5' fill='%23F5E5FF'/%3E%3C/svg%3E");
+		background-color: var(--color-cream);
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='29' height='29' viewBox='0 0 29 29'%3E%3Crect x='0' y='0' width='14.5' height='14.5' fill='%23F5E5FF' fill-opacity='0.6'/%3E%3Crect x='14.5' y='14.5' width='14.5' height='14.5' fill='%23F5E5FF' fill-opacity='0.6'/%3E%3C/svg%3E");
 		background-size: 29px 29px;
 		will-change: transform;
 		animation: checkerboard-drift 6s linear infinite;
@@ -99,6 +126,10 @@
 	.logo-link {
 		position: relative;
 		display: inline-flex;
+		/* Mathematically centered, but the bottom-fade mask makes the header
+		   read as visually shorter than it is, so a true center looks
+		   slightly low. Nudged up to compensate. */
+		transform: translateY(-8px);
 	}
 
 	.logo {
@@ -146,7 +177,7 @@
 			padding: 40px 24px;
 		}
 
-		.site-header::before {
+		.site-header__pattern {
 			inset: -35px;
 			background-size: 35px 35px;
 			animation-name: checkerboard-drift-tablet;
@@ -154,6 +185,10 @@
 
 		.logo {
 			height: 50px;
+		}
+
+		.logo-link {
+			transform: translateY(-9px);
 		}
 	}
 
@@ -169,7 +204,7 @@
 			padding: 44px 28px;
 		}
 
-		.site-header::before {
+		.site-header__pattern {
 			inset: -40px;
 			background-size: 40px 40px;
 			animation-name: checkerboard-drift-desktop;
@@ -177,6 +212,10 @@
 
 		.logo {
 			height: 56px;
+		}
+
+		.logo-link {
+			transform: translateY(-10px);
 		}
 	}
 
@@ -187,7 +226,7 @@
 	}
 
 	@media (prefers-reduced-motion: reduce) {
-		.site-header::before {
+		.site-header__pattern {
 			animation: none;
 		}
 
