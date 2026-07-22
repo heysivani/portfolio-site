@@ -93,12 +93,6 @@
 		}
 	}
 
-	@media (prefers-reduced-motion: reduce) {
-		.site-header::before {
-			animation: none;
-		}
-	}
-
 	.logo-link {
 		position: relative;
 		display: inline-flex;
@@ -140,7 +134,70 @@
 		}
 	}
 
+	/* Header height/logo/checkerboard tile aren't design tokens, so they get
+	   their own proportional bump at the same breakpoints as the global type
+	   scale (see global.css) instead of scaling automatically. */
+	@media (min-width: 600px) {
+		.site-header {
+			height: 150px;
+			padding: 40px 24px;
+		}
+
+		.site-header::before {
+			inset: -35px;
+			background-size: 35px 35px;
+			background-position:
+				0 0,
+				0 17.5px,
+				17.5px -17.5px,
+				-17.5px 0;
+			animation-name: checkerboard-drift-tablet;
+		}
+
+		.logo {
+			height: 50px;
+		}
+	}
+
+	@keyframes checkerboard-drift-tablet {
+		to {
+			transform: translate(-35px, -35px);
+		}
+	}
+
+	@media (min-width: 1024px) {
+		.site-header {
+			height: 170px;
+			padding: 44px 28px;
+		}
+
+		.site-header::before {
+			inset: -40px;
+			background-size: 40px 40px;
+			background-position:
+				0 0,
+				0 20px,
+				20px -20px,
+				-20px 0;
+			animation-name: checkerboard-drift-desktop;
+		}
+
+		.logo {
+			height: 56px;
+		}
+	}
+
+	@keyframes checkerboard-drift-desktop {
+		to {
+			transform: translate(-40px, -40px);
+		}
+	}
+
 	@media (prefers-reduced-motion: reduce) {
+		.site-header::before {
+			animation: none;
+		}
+
 		.logo-shape.is-hovering {
 			animation: none;
 		}

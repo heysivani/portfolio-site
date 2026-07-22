@@ -71,3 +71,55 @@ p {
   max-width: 480px;
   margin: 0 auto;
 }
+
+/* Type/spacing tokens stay pixel-exact to the mobile Figma frames below
+   600px, then step up a tier at tablet and desktop widths so the design
+   doesn't feel stuck at mobile scale on larger screens. No frames exist for
+   these wider sizes, so these are deliberately modest, proportional bumps
+   rather than a full redesign. */
+@media (min-width: 600px) {
+  :root {
+    --text-h1: 32px;
+    --text-h2: 25px;
+    --text-h3: 20px;
+    --text-body-large: 18px;
+    --text-body: 17px;
+    --text-small: 15px;
+    --text-micro: 13px;
+
+    --space-tiny: 3px;
+    --space-micro: 5px;
+    --space-small: 8px;
+    --space-medium: 12px;
+    --space-large: 24px;
+    --space-padding-medium: 24px;
+    --space-padding-large: 38px;
+  }
+
+  .content {
+    max-width: 560px;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --text-h1: 36px;
+    --text-h2: 28px;
+    --text-h3: 22px;
+    --text-body-large: 19px;
+    --text-body: 18px;
+    --text-small: 16px;
+    --text-micro: 14px;
+
+    --space-micro: 6px;
+    --space-small: 9px;
+    --space-medium: 14px;
+    --space-large: 28px;
+    --space-padding-medium: 28px;
+    --space-padding-large: 46px;
+  }
+
+  .content {
+    max-width: 640px;
+  }
+}

@@ -162,6 +162,23 @@ const abilities = ['UX research', 'UI design', 'Coding'];
 		animation: pop-in 0.5s ease-out both;
 	}
 
+	/* Scaled proportionally (same aspect ratio) at the same breakpoints as
+	   the global type scale, since it's a fixed pixel size rather than a
+	   design token. */
+	@media (min-width: 600px) {
+		.photo {
+			width: 165px;
+			height: 157px;
+		}
+	}
+
+	@media (min-width: 1024px) {
+		.photo {
+			width: 185px;
+			height: 176px;
+		}
+	}
+
 	.photo img {
 		position: absolute;
 		width: 262.51%;
