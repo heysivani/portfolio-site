@@ -1,0 +1,178 @@
+---
+interface Props {
+	href: string;
+	image: string;
+	title: string;
+	description: string;
+	skills: string;
+}
+
+const { href, image, title, description, skills } = Astro.props;
+---
+
+<a class="project-card" href={href}>
+	<div class="project-card__body">
+		<div class="project-card__image">
+			<img src={image} alt="" />
+		</div>
+		<div class="project-card__text">
+			<h3>{title}</h3>
+			<hr />
+			<p>{description}</p>
+			<hr />
+			<p class="project-card__skills">{skills}</p>
+		</div>
+	</div>
+	<div class="project-card__cta">View project &rarr;</div>
+</a>
+
+<script>
+	const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+	if (!reduceMotion) {
+		const cards = document.querySelectorAll('.project-card');
+
+		cards.forEach((card) => {
+			// Unlike the other squash-and-stretch triggers on this site, this
+			// one is deliberately tied to hover state: it settles larger while
+			// hovering (so it's clear the card is "active"), then squishes
+			// back down on pointer-leave — rather than always playing the same
+			// animation back to its own starting size regardless of hover.
+			card.addEventListener('pointerenter', () => {
+				card.classList.remove('is-leaving');
+				card.classList.remove('is-hovering');
+				void card.getBoundingClientRect();
+				card.classList.add('is-hovering');
+			});
+
+			card.addEventListener('pointerleave', () => {
+				card.classList.remove('is-hovering');
+				card.classList.remove('is-leaving');
+				void card.getBoundingClientRect();
+				card.classList.add('is-leaving');
+			});
+
+			card.addEventListener('animationend', (event) => {
+				if (event.animationName === 'card-squish-back') {
+					card.classList.remove('is-leaving');
+				}
+			});
+		});
+	}
+</script>
+
+<style>
+	.project-card {
+		display: block;
+		position: relative;
+		border: 1px solid var(--color-dark-gray);
+		border-radius: 5px;
+		box-shadow: 0 8px 16px rgba(124, 112, 132, 0.12);
+		text-decoration: none;
+		color: inherit;
+	}
+
+	.project-card.is-hovering {
+		animation: card-stretch-in 0.32s ease-in-out forwards;
+	}
+
+	.project-card.is-leaving {
+		animation: card-squish-back 0.26s ease-in-out forwards;
+	}
+
+	@keyframes card-stretch-in {
+		0% {
+			transform: scale(1, 1);
+		}
+		40% {
+			transform: scale(1.055, 0.965);
+		}
+		100% {
+			transform: scale(1.05, 1.05);
+		}
+	}
+
+	@keyframes card-squish-back {
+		0% {
+			transform: scale(1.05, 1.05);
+		}
+		40% {
+			transform: scale(0.98, 1.015);
+		}
+		100% {
+			transform: scale(1, 1);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.project-card.is-hovering,
+		.project-card.is-leaving {
+			animation: none;
+		}
+	}
+
+	.project-card__body {
+		position: relative;
+		padding: var(--space-padding-medium);
+	}
+
+	.project-card__image {
+		aspect-ratio: 2000 / 1125;
+		border: 1px solid var(--color-dark-gray);
+		border-radius: 5px;
+		overflow: hidden;
+	}
+
+	.project-card__image img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.project-card__text {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-large);
+		padding-top: var(--space-large);
+	}
+
+	.project-card__text h3 {
+		margin: 0;
+		font-family: var(--font-display);
+		font-size: var(--text-h2);
+		font-weight: 500;
+	}
+
+	.project-card__text hr {
+		width: 100%;
+		height: 1px;
+		margin: 0;
+		border: none;
+		background-color: var(--color-light-grey);
+		border-radius: 5px;
+	}
+
+	.project-card__text p {
+		margin: 0;
+		font-size: var(--text-body);
+		line-height: 1.5;
+	}
+
+	.project-card__skills {
+		font-size: var(--text-micro);
+		color: var(--color-light-grey);
+	}
+
+	.project-card__cta {
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 50px;
+		border-top: 1px solid var(--color-dark-gray);
+		border-radius: 0 0 5px 5px;
+		background-color: var(--color-light-green);
+		font-family: var(--font-display);
+		font-size: var(--text-micro);
+	}
+</style>

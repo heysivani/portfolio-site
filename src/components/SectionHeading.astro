@@ -1,0 +1,150 @@
+---
+interface Props {
+	text: string;
+}
+
+const { text } = Astro.props;
+const triangles = [0, 1, 2];
+---
+
+<div class="section-heading">
+	<div class="marker-group marker-group--left">
+		{
+			triangles.map(() => (
+				<svg class="marker" viewBox="0 0 11.681 13.0863" width="12" height="13" xmlns="http://www.w3.org/2000/svg">
+					<path d="M4.67995 12.3252C5.11947 13.3398 6.55822 13.34 6.99798 12.3255L11.5754 1.76554C11.937 0.93144 11.3256 0 10.4165 0H5.84076H1.26454C0.355578 0 -0.25585 0.931198 0.105459 1.76526L4.67995 12.3252Z" />
+				</svg>
+			))
+		}
+	</div>
+	<h2>{text}</h2>
+	<div class="marker-group marker-group--right">
+		{
+			triangles.map(() => (
+				<svg class="marker" viewBox="0 0 11.681 13.0863" width="12" height="13" xmlns="http://www.w3.org/2000/svg">
+					<path d="M4.67995 12.3252C5.11947 13.3398 6.55822 13.34 6.99798 12.3255L11.5754 1.76554C11.937 0.93144 11.3256 0 10.4165 0H5.84076H1.26454C0.355578 0 -0.25585 0.931198 0.105459 1.76526L4.67995 12.3252Z" />
+				</svg>
+			))
+		}
+	</div>
+</div>
+
+<script>
+	const headings = document.querySelectorAll('.section-heading');
+	const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+	if (headings.length > 0 && !reduceMotion) {
+		// light-green -> medium-green, matching --color-light-green / --color-medium-green
+		const fromColor = [213, 238, 216];
+		const toColor = [83, 196, 156];
+
+		const trackers = Array.from(headings).map((heading) => {
+			let triggerLine = 0;
+			let rampDistance = 1;
+
+			const measure = () => {
+				// Tracks the element's actual position in the viewport (not raw
+				// scroll distance) so this can't start before it's actually visible
+				// on any screen size. Progress stays 0 until the heading's top has
+				// scrolled up past a line 80% down the viewport (i.e. a bit after it
+				// first enters from the bottom), then ramps over the next ~0.6
+				// viewport-heights.
+				triggerLine = window.innerHeight * 0.8;
+				rampDistance = Math.max(window.innerHeight * 0.6, 1);
+			};
+
+			const updateProgress = () => {
+				// Also require actual scrolling to have happened, so a viewport tall
+				// enough to fit the whole page can't show progress before any
+				// interaction, even if the element's position would otherwise say
+				// so.
+				const rect = heading.getBoundingClientRect();
+				const progress = window.scrollY <= 0 ? 0 : Math.max(0, Math.min(1, (triggerLine - rect.top) / rampDistance));
+				heading.style.setProperty('--arrow-progress', progress.toFixed(3));
+
+				const [r, g, b] = fromColor.map((from, i) => Math.round(from + (toColor[i] - from) * progress));
+				heading.style.setProperty('--arrow-color', `rgb(${r}, ${g}, ${b})`);
+			};
+
+			return { measure, updateProgress };
+		});
+
+		let ticking = false;
+
+		const onScroll = () => {
+			if (!ticking) {
+				window.requestAnimationFrame(() => {
+					trackers.forEach((t) => t.updateProgress());
+					ticking = false;
+				});
+				ticking = true;
+			}
+		};
+
+		const onResize = () => {
+			trackers.forEach((t) => {
+				t.measure();
+				t.updateProgress();
+			});
+		};
+
+		onResize();
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onResize);
+	}
+</script>
+
+<style>
+	.section-heading {
+		--arrow-progress: 0;
+		--arrow-color: var(--color-light-green);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: var(--space-large);
+		padding: var(--space-padding-medium) var(--space-padding-large);
+	}
+
+	h2 {
+		flex: 1;
+		margin: 0;
+		text-align: center;
+		font-family: var(--font-display);
+		font-size: var(--text-h1);
+		font-weight: 500;
+	}
+
+	.marker-group {
+		flex-shrink: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 3.4px;
+	}
+
+	.marker {
+		display: block;
+		will-change: transform;
+	}
+
+	.marker path {
+		fill: var(--arrow-color);
+	}
+
+	/* Base orientation of the SVG points down; rotate each triangle from a
+	   horizontal starting position toward 0deg (down) as the section scrolls
+	   into view. */
+	.marker-group--left .marker {
+		transform: rotate(calc(-90deg + var(--arrow-progress) * 90deg));
+	}
+
+	.marker-group--right .marker {
+		transform: rotate(calc(90deg - var(--arrow-progress) * 90deg));
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.section-heading {
+			--arrow-progress: 1;
+			--arrow-color: var(--color-medium-green);
+		}
+	}
+</style>

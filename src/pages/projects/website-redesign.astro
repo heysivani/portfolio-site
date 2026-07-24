@@ -1,0 +1,39 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+---
+
+<BaseLayout title="Case Study — Coming Soon | sivani.me">
+	<SiteHeader />
+	<div class="content">
+		<main class="coming-soon">
+			<h1>coming soon</h1>
+			<p>This case study is still being written up. Check back shortly.</p>
+			<a href="/">&larr; back home</a>
+		</main>
+	</div>
+	<SiteFooter />
+</BaseLayout>
+
+<style>
+	.coming-soon {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: var(--space-medium);
+		padding: var(--space-padding-large);
+	}
+
+	.coming-soon h1 {
+		margin: 0;
+		font-family: var(--font-display);
+		font-size: var(--text-h1);
+		font-weight: 500;
+	}
+
+	.coming-soon a {
+		font-size: var(--text-body);
+		text-decoration: underline;
+	}
+</style>

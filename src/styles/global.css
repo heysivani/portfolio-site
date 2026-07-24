@@ -1,0 +1,125 @@
+:root {
+  /* Color tokens — values taken from the live Figma file variables, not the
+     written brief, where the two disagree (accent/light + accent/primary). */
+  --color-cream: #f6f4f0;
+  --color-dark-gray: #444444;
+  --color-light-grey: #7c7084;
+  --color-light-purple: #f5e5ff;
+  --color-medium-purple: #c894e9;
+  --color-medium-green: #53c49c;
+  --color-light-green: #d5eed8;
+
+  /* Typography */
+  --font-display: 'Comfortaa', cursive;
+  --font-body: 'Manrope', sans-serif;
+
+  --text-h1: 28px;
+  --text-h2: 22px;
+  --text-h3: 18px;
+  --text-body-large: 17px;
+  --text-body: 16px;
+  --text-small: 14px;
+  --text-micro: 12px;
+
+  /* Spacing */
+  --space-tiny: 2px;
+  --space-micro: 4px;
+  --space-small: 7px;
+  --space-medium: 10px;
+  --space-large: 20px;
+  --space-padding-medium: 20px;
+  --space-padding-large: 30px;
+
+  --stroke-thin: 0.7px;
+  --stroke-medium: 1px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--color-cream);
+  color: var(--color-dark-gray);
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: 1.5;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+}
+
+p {
+  margin: 0;
+}
+
+.content {
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* Type/spacing tokens stay pixel-exact to the mobile Figma frames below
+   600px, then step up a tier at tablet and desktop widths so the design
+   doesn't feel stuck at mobile scale on larger screens. No frames exist for
+   these wider sizes, so these are deliberately modest, proportional bumps
+   rather than a full redesign. */
+@media (min-width: 600px) {
+  :root {
+    --text-h1: 32px;
+    --text-h2: 25px;
+    --text-h3: 20px;
+    --text-body-large: 18px;
+    --text-body: 17px;
+    --text-small: 15px;
+    --text-micro: 13px;
+
+    --space-tiny: 3px;
+    --space-micro: 5px;
+    --space-small: 8px;
+    --space-medium: 12px;
+    --space-large: 24px;
+    --space-padding-medium: 24px;
+    --space-padding-large: 38px;
+  }
+
+  .content {
+    max-width: 560px;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --text-h1: 36px;
+    --text-h2: 28px;
+    --text-h3: 22px;
+    --text-body-large: 19px;
+    --text-body: 18px;
+    --text-small: 16px;
+    --text-micro: 14px;
+
+    --space-micro: 6px;
+    --space-small: 9px;
+    --space-medium: 14px;
+    --space-large: 28px;
+    --space-padding-medium: 28px;
+    --space-padding-large: 46px;
+  }
+
+  .content {
+    max-width: 640px;
+  }
+}
