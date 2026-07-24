@@ -1,0 +1,133 @@
+---
+---
+
+<button class="theme-toggle" type="button" aria-pressed="false" aria-label="Switch to dark mode">
+	<span class="theme-toggle__track">
+		<span class="theme-toggle__thumb">
+			<svg class="theme-toggle__icon theme-toggle__icon--sun" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+				<circle cx="12" cy="12" r="4.1" fill="none" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" />
+				<line x1="12" y1="2.3" x2="12" y2="4.2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+				<line x1="12" y1="19.8" x2="12" y2="21.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+				<line x1="19.1" y1="4.9" x2="17.75" y2="6.25" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+				<line x1="6.25" y1="17.75" x2="4.9" y2="19.1" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+				<line x1="21.7" y1="12" x2="19.8" y2="12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+				<line x1="4.2" y1="12" x2="2.3" y2="12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+				<line x1="19.1" y1="19.1" x2="17.75" y2="17.75" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+				<line x1="6.25" y1="6.25" x2="4.9" y2="4.9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+			</svg>
+			<svg class="theme-toggle__icon theme-toggle__icon--moon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+				<path
+					d="M12.3 3.02c.09 0 .18 0 .27.01a8.96 8.96 0 0 0-2.16 5.84c0 4.97 4.03 9 9 9 .61 0 1.2-.06 1.78-.18A8.98 8.98 0 0 1 12.3 21c-4.97 0-9-4.03-9-9s4.03-8.98 9-8.98Z"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="1.5"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+				/>
+			</svg>
+		</span>
+	</span>
+</button>
+
+<script>
+	const STORAGE_KEY = 'sivani:theme';
+	const toggle = document.querySelector('.theme-toggle');
+
+	if (toggle instanceof HTMLElement) {
+		// Light is the default until the palette swap (see component note) is
+		// wired up — only ever show dark if the user explicitly chose it
+		// before.
+		const stored = localStorage.getItem(STORAGE_KEY);
+		let isDark = stored === 'dark';
+
+		const applyState = () => {
+			document.documentElement.dataset.theme = isDark ? 'dark' : 'light';
+			toggle.classList.toggle('is-dark', isDark);
+			toggle.setAttribute('aria-pressed', String(isDark));
+			toggle.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+		};
+
+		applyState();
+
+		toggle.addEventListener('click', () => {
+			isDark = !isDark;
+			localStorage.setItem(STORAGE_KEY, isDark ? 'dark' : 'light');
+			applyState();
+		});
+	}
+</script>
+
+<style>
+	.theme-toggle {
+		display: block;
+		flex-shrink: 0;
+		padding: 8px;
+		border: none;
+		background: none;
+		cursor: pointer;
+		-webkit-tap-highlight-color: transparent;
+	}
+
+	.theme-toggle__track {
+		display: block;
+		position: relative;
+		width: 20px;
+		height: 10px;
+		border: 1px solid var(--color-medium-purple);
+		border-radius: 10px;
+		background-color: var(--color-light-purple);
+		/* Scales the whole track+thumb+icons up as one unit, anchored to the
+		   top-left corner so the toggle's position (matched to Figma) stays
+		   put while it grows. */
+		transform: scale(2);
+		transform-origin: top left;
+	}
+
+	.theme-toggle__thumb {
+		position: absolute;
+		top: -1px;
+		left: 9px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 11px;
+		height: 10px;
+		border: 1px solid var(--color-medium-purple);
+		border-radius: 10px;
+		background-color: var(--color-medium-purple);
+		transition: left 0.2s ease-out;
+	}
+
+	.theme-toggle.is-dark .theme-toggle__thumb {
+		left: -1px;
+	}
+
+	.theme-toggle__icon {
+		position: absolute;
+		width: 8px;
+		height: 8px;
+		color: var(--color-light-purple);
+	}
+
+	.theme-toggle__icon--sun {
+		opacity: 1;
+	}
+
+	.theme-toggle__icon--moon {
+		opacity: 0;
+	}
+
+	.theme-toggle.is-dark .theme-toggle__icon--sun {
+		opacity: 0;
+	}
+
+	.theme-toggle.is-dark .theme-toggle__icon--moon {
+		opacity: 1;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.theme-toggle__thumb {
+			transition: none;
+		}
+	}
+</style>

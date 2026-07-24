@@ -1,10 +1,12 @@
 ---
+import ThemeToggle from './ThemeToggle.astro';
 ---
 
 <header class="site-header">
 	<div class="site-header__pattern-wrap">
 		<div class="site-header__pattern"></div>
 	</div>
+	<ThemeToggle />
 	<a class="logo-link" href="/" aria-label="Go to home page">
 		<svg class="logo" preserveAspectRatio="none" overflow="visible" viewBox="0 0 151.861 40.528" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
 			<g class="logo-shape">
@@ -102,6 +104,20 @@
 		overflow: hidden;
 	}
 
+	/* :global since ThemeToggle.astro scopes its own root class — positioned
+	   here (not in that component) since placement is a header-layout
+	   concern, not something the toggle itself should know about.
+	   Figma places it at (8, 8) from the header's own top-left corner, but
+	   nudged an extra 10px in both directions for breathing room — not
+	   centered, not right-aligned. .theme-toggle's own 8px padding (for a
+	   bigger tap target) accounts for the base offset, so its visible track
+	   ends up exactly at (18, 18). */
+	.site-header :global(.theme-toggle) {
+		position: absolute;
+		top: 10px;
+		left: 10px;
+	}
+
 	.site-header__pattern-wrap {
 		position: absolute;
 		inset: 0;
@@ -145,12 +161,18 @@
 		   element-level opacity) keeps the pattern's softened look
 		   independent of the wrapper's fade-to-transparent mask.
 		   Fill color must be kept in sync with --color-light-purple (CSS custom
-		   properties aren't visible inside a data-URI'd SVG). */
+		   properties aren't visible inside a data-URI'd SVG, so the dark-mode
+		   fill is a second hardcoded data-URI below, swapped in by selector
+		   rather than computed). */
 		background-color: var(--color-cream);
 		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='29' height='29' viewBox='0 0 29 29'%3E%3Crect x='0' y='0' width='14.5' height='14.5' fill='%23F5E5FF' fill-opacity='0.6'/%3E%3Crect x='14.5' y='14.5' width='14.5' height='14.5' fill='%23F5E5FF' fill-opacity='0.6'/%3E%3C/svg%3E");
 		background-size: 29px 29px;
 		will-change: transform;
 		animation: checkerboard-drift 6s linear infinite;
+	}
+
+	:global([data-theme='dark']) .site-header__pattern {
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='29' height='29' viewBox='0 0 29 29'%3E%3Crect x='0' y='0' width='14.5' height='14.5' fill='%23584E5E' fill-opacity='0.6'/%3E%3Crect x='14.5' y='14.5' width='14.5' height='14.5' fill='%23584E5E' fill-opacity='0.6'/%3E%3C/svg%3E");
 	}
 
 	@keyframes checkerboard-drift {
