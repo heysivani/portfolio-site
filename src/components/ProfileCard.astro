@@ -190,10 +190,32 @@ const abilities = ['UX research', 'UI design', 'Coding'];
 		box-shadow: 0 8px 8px rgba(124, 112, 132, 0.12);
 	}
 
-	/* Same squash-and-stretch keyframe as .photo__frame (defined further
-	   down), reused here so a click on the photo also nudges the whole card. */
+	/* A softer version of .photo__frame's squash-and-stretch (defined further
+	   down) — the whole card nudging as much as the photo itself felt like
+	   too much, so this one uses about half the amplitude. */
 	.profile-card.is-active {
-		animation: photo-squash-stretch 0.5s ease-in-out;
+		animation: card-squash-stretch 0.5s ease-in-out;
+	}
+
+	@keyframes card-squash-stretch {
+		0% {
+			transform: scale(1, 1);
+		}
+		25% {
+			transform: scale(1.02, 0.985);
+		}
+		50% {
+			transform: scale(0.9875, 1.0175);
+		}
+		70% {
+			transform: scale(1.0075, 0.995);
+		}
+		85% {
+			transform: scale(0.9975, 1.0025);
+		}
+		100% {
+			transform: scale(1, 1);
+		}
 	}
 
 	@media (prefers-reduced-motion: reduce) {
