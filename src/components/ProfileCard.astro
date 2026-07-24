@@ -12,7 +12,9 @@ const abilities = ['UX research', 'UI design', 'Coding'];
 		<div class="profile-row">
 			<div class="photo">
 				<div class="photo__frame">
-					<img src="/images/profile.png" alt="Portrait of Sivani" width="145" height="138" draggable="false" />
+					<div class="photo__crop">
+						<img src="/images/profile.png" alt="Portrait of Sivani" width="145" height="138" draggable="false" />
+					</div>
 				</div>
 			</div>
 			<div class="stats">
@@ -142,6 +144,41 @@ const abilities = ['UX research', 'UI design', 'Coding'];
 			photoFrame.classList.remove('is-active');
 		});
 	}
+
+	const profileCardHeader = document.querySelector('.profile-card__header');
+
+	if (photoFrame instanceof HTMLElement) {
+		// Click/tap only (not hover): toggles a persistent flipped state —
+		// mirrors the image, and swaps both the frame's and the card
+		// header's fill color — independent of the squash-and-stretch above
+		// (it's a state toggle, not a self-completing animation, and
+		// reduced-motion users still get the state change, just without the
+		// transition — see the stylesheet).
+		photoFrame.addEventListener('click', () => {
+			photoFrame.classList.toggle('is-flipped');
+			profileCardHeader?.classList.toggle('is-flipped');
+		});
+	}
+
+	if (photo instanceof HTMLElement && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+		// Same squash-and-stretch as .photo__frame, applied to the whole card,
+		// click/tap only (not hover) — triggers alongside the flip above.
+		// .profile-card has no animation of its own, so there's no shorthand
+		// collision to worry about here like there is for .photo/.photo__frame.
+		const profileCard = document.querySelector('.profile-card');
+
+		if (profileCard instanceof HTMLElement) {
+			photo.addEventListener('click', () => {
+				profileCard.classList.remove('is-active');
+				void profileCard.getBoundingClientRect();
+				profileCard.classList.add('is-active');
+			});
+
+			profileCard.addEventListener('animationend', () => {
+				profileCard.classList.remove('is-active');
+			});
+		}
+	}
 </script>
 
 <style>
@@ -153,9 +190,34 @@ const abilities = ['UX research', 'UI design', 'Coding'];
 		box-shadow: 0 8px 8px rgba(124, 112, 132, 0.12);
 	}
 
+	/* Same squash-and-stretch keyframe as .photo__frame (defined further
+	   down), reused here so a click on the photo also nudges the whole card. */
+	.profile-card.is-active {
+		animation: photo-squash-stretch 0.5s ease-in-out;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.profile-card.is-active {
+			animation: none;
+		}
+	}
+
 	.profile-card__header {
 		padding: var(--space-medium) var(--space-padding-medium);
 		border-bottom: 1px solid var(--color-dark-gray);
+		border-radius: 5px 5px 0 0;
+		background-color: var(--color-light-purple);
+		transition: background-color 0.3s ease;
+	}
+
+	.profile-card__header.is-flipped {
+		background-color: var(--color-light-green);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.profile-card__header {
+			transition: none;
+		}
 	}
 
 	.profile-card__header p {
@@ -213,6 +275,14 @@ const abilities = ['UX research', 'UI design', 'Coding'];
 		background-color: var(--color-light-purple);
 		overflow: hidden;
 		cursor: pointer;
+		transition: background-color 0.3s ease;
+	}
+
+	.photo__crop {
+		position: relative;
+		width: 100%;
+		height: 100%;
+		transition: transform 0.3s ease;
 	}
 
 	.photo img {
@@ -222,6 +292,27 @@ const abilities = ['UX research', 'UI design', 'Coding'];
 		max-width: none;
 		left: -23.17%;
 		top: -19.15%;
+	}
+
+	.photo__frame.is-flipped {
+		background-color: var(--color-light-green);
+	}
+
+	.photo__frame.is-flipped .photo__crop {
+		/* Mirrors .photo__crop, not the raw img: the img is oversized and
+		   cropped with an off-center offset (left/top above) to frame the
+		   subject, so flipping the img itself around its OWN center reveals a
+		   different, off-target slice of the source photo. .photo__crop
+		   exactly matches the visible window, so mirroring it flips what's
+		   already visible in place — the subject stays framed either way. */
+		transform: scaleX(-1);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.photo__crop,
+		.photo__frame {
+			transition: none;
+		}
 	}
 
 	.photo__frame.is-active {
