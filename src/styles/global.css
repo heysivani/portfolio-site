@@ -34,6 +34,19 @@
   --stroke-medium: 1px;
 }
 
+/* Dark-mode palette, from the Figma dark-mode frames (node 4123:16 /
+   4123:261). accent/medium-purple and accent/medium-green are unchanged
+   between modes per Figma, so they're omitted here. Swap is instant (no
+   transition) since it's driven by ThemeToggle.astro setting this attribute
+   directly, not a gradual preference change. */
+:root[data-theme='dark'] {
+  --color-cream: #39323d;
+  --color-dark-gray: #ddd5e3;
+  --color-light-grey: #b0a1b9;
+  --color-light-purple: #584e5e;
+  --color-light-green: #252c2a;
+}
+
 *,
 *::before,
 *::after {

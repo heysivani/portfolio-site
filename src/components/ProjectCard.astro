@@ -53,7 +53,7 @@ const { href, image, title, description, skills } = Astro.props;
 			});
 
 			card.addEventListener('animationend', (event) => {
-				if (event.animationName === 'card-squish-back') {
+				if (event.animationName === 'card-bubble-out') {
 					card.classList.remove('is-leaving');
 				}
 			});
@@ -73,34 +73,44 @@ const { href, image, title, description, skills } = Astro.props;
 	}
 
 	.project-card.is-hovering {
-		animation: card-stretch-in 0.32s ease-in-out forwards;
+		animation: card-bubble-in 0.42s ease-out forwards;
 	}
 
 	.project-card.is-leaving {
-		animation: card-squish-back 0.26s ease-in-out forwards;
+		animation: card-bubble-out 0.34s ease-out forwards;
 	}
 
-	@keyframes card-stretch-in {
+	/* Gentle "bubble" pop: a soft, uniform scale-up that overshoots its
+	   resting size slightly before settling, rather than the old squash-and-
+	   stretch's uneven x/y distortion — reads as bouncier and more
+	   cartoon-y/game-y, less like the card is being physically squeezed. */
+	@keyframes card-bubble-in {
 		0% {
-			transform: scale(1, 1);
+			transform: scale(1);
 		}
-		40% {
-			transform: scale(1.055, 0.965);
+		55% {
+			transform: scale(1.075);
+		}
+		80% {
+			transform: scale(1.03);
 		}
 		100% {
-			transform: scale(1.05, 1.05);
+			transform: scale(1.05);
 		}
 	}
 
-	@keyframes card-squish-back {
+	@keyframes card-bubble-out {
 		0% {
-			transform: scale(1.05, 1.05);
+			transform: scale(1.05);
 		}
-		40% {
-			transform: scale(0.98, 1.015);
+		45% {
+			transform: scale(0.975);
+		}
+		75% {
+			transform: scale(1.015);
 		}
 		100% {
-			transform: scale(1, 1);
+			transform: scale(1);
 		}
 	}
 
