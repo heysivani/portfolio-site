@@ -32,23 +32,59 @@
 
 <script>
 	const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+	// Mouse-capable devices additionally get independent per-letter hover;
+	// every device gets the whole logo squashing-and-stretching as one unit
+	// on click/tap (see below), regardless of hover support.
+	const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
 	if (!reduceMotion) {
-		const shapes = document.querySelectorAll('.logo-shape');
+		const logo = document.querySelector('.logo');
+		const logoLink = document.querySelector('.logo-link');
+		const CLICK_ANIM_FLAG = 'sivani:logo-click-anim-pending';
 
-		shapes.forEach((shape) => {
-			shape.addEventListener('pointerenter', () => {
-				// Restart from scratch even if already mid-animation, and let it
-				// keep playing after the pointer leaves (it's not tied to :hover).
-				shape.classList.remove('is-hovering');
-				void shape.getBoundingClientRect();
-				shape.classList.add('is-hovering');
-			});
+		if (canHover) {
+			const shapes = document.querySelectorAll('.logo-shape');
 
-			shape.addEventListener('animationend', () => {
-				shape.classList.remove('is-hovering');
+			shapes.forEach((shape) => {
+				shape.addEventListener('pointerenter', () => {
+					// Restart from scratch even if already mid-animation, and let
+					// it keep playing after the pointer leaves (it's not tied to
+					// :hover).
+					shape.classList.remove('is-hovering');
+					void shape.getBoundingClientRect();
+					shape.classList.add('is-hovering');
+				});
+
+				shape.addEventListener('animationend', () => {
+					shape.classList.remove('is-hovering');
+				});
 			});
+		}
+
+		const triggerLogoSquash = () => {
+			if (!logo) return;
+			logo.classList.remove('is-active');
+			void logo.getBoundingClientRect();
+			logo.classList.add('is-active');
+		};
+
+		logo?.addEventListener('animationend', () => {
+			logo.classList.remove('is-active');
 		});
+
+		// Clicking/tapping the logo navigates to "/" — a full page load even
+		// if already there, since this is a static multi-page site, not a
+		// client-side-routed one. That unloads the current page almost
+		// immediately, too fast to see the animation play. Flag it instead,
+		// and let the destination page's own load trigger it below.
+		logoLink?.addEventListener('click', () => {
+			sessionStorage.setItem(CLICK_ANIM_FLAG, '1');
+		});
+
+		if (sessionStorage.getItem(CLICK_ANIM_FLAG)) {
+			sessionStorage.removeItem(CLICK_ANIM_FLAG);
+			triggerLogoSquash();
+		}
 	}
 </script>
 
@@ -136,6 +172,11 @@
 		display: block;
 		height: 41px;
 		width: auto;
+		transform-origin: 50% 100%;
+	}
+
+	.logo.is-active {
+		animation: logo-squash-stretch 0.5s ease-in-out;
 	}
 
 	.logo-shape {
@@ -231,6 +272,10 @@
 		}
 
 		.logo-shape.is-hovering {
+			animation: none;
+		}
+
+		.logo.is-active {
 			animation: none;
 		}
 	}
