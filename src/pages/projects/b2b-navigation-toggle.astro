@@ -1,0 +1,331 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
+---
+
+<BaseLayout
+	title="Increasing B2B Traffic: One Confusing Toggle | sivani.me"
+	description="Updated our design system to fit new B2B brand guidelines, and discovered a critical issue that was bottlenecking the number of users that landed on our B2B pages."
+>
+	<SiteHeader />
+	<div class="content">
+		<main>
+			<section class="hero">
+				<a class="back-link" href="/">
+					<svg viewBox="0 0 17 17" width="17" height="17" xmlns="http://www.w3.org/2000/svg">
+						<path
+							d="M9.1 3.7 L4.3 8.5 L9.1 13.3"
+							stroke="currentColor"
+							stroke-width="1"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							fill="none"
+						/>
+						<path d="M4.3 8.5 H13.7" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+					</svg>
+					<span>Home</span>
+				</a>
+				<div class="hero__body">
+					<div class="hero__heading">
+						<h1>Increasing B2B Traffic: One Confusing Toggle</h1>
+						<p class="hero__company">Company: Code Chrysalis</p>
+					</div>
+					<div class="hero__image">
+						<img src="/images/case-study-3/cover.svg" alt="" />
+					</div>
+					<hr />
+					<p>
+						Updated our design system to fit new B2B brand guidelines, and discovered a critical issue that was
+						bottlenecking the number of users that landed on our B2B pages.
+					</p>
+					<hr />
+					<p class="hero__skills">
+						Skills: stakeholder management, design systems, brand implementation, navigation design, ui design,
+						analytics review, project management
+					</p>
+				</div>
+			</section>
+
+			<SectionHeading text="Summary" />
+
+			<section class="summary">
+				<h2>Challenge</h2>
+				<p>
+					Our company was looking to expand the scope of its B2B offerings, and target a wider range of clients,
+					including SMBs (small and medium-sized businesses). Thus far, the B2B side of our site – that existed on
+					the same domain as our B2C site – had gotten little traffic, much less compared to the B2C side. Given
+					our changing business goals, we were looking to increase the number of users landing on our B2B pages,
+					redesign our existing B2B pages, and add more content explaining our newly expanded B2B offerings.
+				</p>
+
+				<h2>Key insight</h2>
+				<p>
+					Evaluating the B2C side of the site ended up surfacing a critical B2B issue: users didn't always know
+					the B2B side even existed. Our B2C site was the default homepage and outranked B2B in search, and had
+					been around longer since B2B programs were added later. A toggle existed on the navbar to switch
+					between B2C and B2B – but this toggle conflated language with business/audience type. Switching from
+					English to Japanese switched from B2C to B2B – but this was an internal understanding within our
+					company that did not make intuitive sense to our users.
+				</p>
+				<p>
+					The highest impact solution to this problem ended up being surprisingly simple, in contrast to the
+					thorniness of the problem it solved: what I needed to do was fix a button.
+				</p>
+
+				<h2>Outcomes</h2>
+				<ul>
+					<li>
+						I removed the language toggle entirely, replacing it with navbar links that explicitly stated where
+						they would take the user, depending on whether they were on the B2C or B2B side of the site.
+					</li>
+					<li>
+						After making this change, we tracked our traffic via our analytics dashboard and confirmed that we had
+						higher traffic heading to our B2B pages in the months following this change. We also saw a higher
+						average scroll percentage, and higher average number of clicks on the redesigned Home and Corporate
+						Training pages.
+					</li>
+				</ul>
+			</section>
+
+			<SectionHeading text="Deep dive" />
+
+			<CaseStudyBlock image="/images/case-study-3/context.svg" title="Context">
+				<p>
+					Soon after joining the Product team, Code Chrysalis's external website was handed over to me to manage
+					– it had previously been managed by the marketing teams, and updated by contractors.
+				</p>
+				<p>
+					Our company was looking to expand the scope of its B2B offerings, and target a wider range of clients,
+					including SMBs (small and medium-sized businesses). Their goal was to add new content to the site,
+					explaining their programs in detail, in order to better leverage the site as material to promote their
+					services. Thus far, the B2B side of our site – that existed on the same domain as our B2C site – had
+					gotten little traffic, much less compared to the B2C side. Given our changing business goals, we were
+					looking to increase the number of users landing on our B2B pages. To do that, we needed to better
+					understand why this gap in traffic existed.
+				</p>
+			</CaseStudyBlock>
+
+			<CaseStudyBlock image="/images/case-study-3/my-role.svg" title="Your Role">
+				<p>
+					I was the sole designer on this project, and owned the entire process end-to-end: I conducted research,
+					identified problems, designed and implemented solutions, and measured their impact. I managed this
+					project as a cross-team collaboration between the Product and B2B teams.
+				</p>
+			</CaseStudyBlock>
+
+			<CaseStudyBlock image="/images/case-study-3/process.svg" title="Process">
+				<p>
+					Held weekly syncs with the B2B Marketing Manager, since this was a long-term project with many large
+					content updates to the B2B side of the site, of which the copy and media were supplied to me by the
+					marketing team.
+				</p>
+				<p>Received new brand guidelines and implemented them into the design system.</p>
+				<p>Redesigned existing pages (Home and Corporate Training) to fit the new design system.</p>
+				<p>Created design and structure for new offering pages and landing pages.</p>
+				<p>Identified updates to make to site navigation.</p>
+			</CaseStudyBlock>
+
+			<CaseStudyBlock image="/images/case-study-3/key-insights.svg" title="Key Insight">
+				<p>
+					A related evaluation of this site's B2C side surfaced a discoverability problem that turned out to
+					affect B2B just as much: our B2C site was the default homepage and outranked B2B in search, and had been
+					around longer since B2B programs were added later. This meant many users ended up on the B2C site, and:
+				</p>
+				<ul>
+					<li>Did not know our company had a B2B department.</li>
+					<li>Did not know how to find information about our B2B offerings, even once they were on our homepage.</li>
+				</ul>
+				<p>
+					This was because in the past, language had been conflated with business/audience type. Our B2C pages
+					were all in English. A language toggle existed via clicking on a Japanese flag. Clicking on this flag
+					would switch the site to Japanese – and also switch to the B2B side of the site. There were multiple
+					issues with this:
+				</p>
+				<ul>
+					<li>The Japanese flag looked like it signaled "current state" when displayed on the English pages – this was confusing.</li>
+					<li>
+						We were assuming that an internal assumption within our company would be understood by external
+						clients. Internally, we understood that B2C bootcamps primarily served English-speaking customers and
+						B2B programs primarily served Japanese-speaking customers. A user visiting our site would not know
+						this.
+					</li>
+				</ul>
+				<p>
+					The highest impact solution to this problem ended up being surprisingly simple, in contrast to the
+					thorniness of the problem it solved: what I needed to do was fix a button.
+				</p>
+			</CaseStudyBlock>
+
+			<CaseStudyBlock image="/images/case-study-3/outcomes.svg" title="Outcome">
+				<p>
+					To make sure it was easy for a user entering our more discoverable B2C site to find their way to the
+					B2B side, I had to redesign the toggle. I designed and implemented this change myself (Figma for
+					design, Webflow for development).
+				</p>
+				<p>This involved:</p>
+				<ul>
+					<li>
+						Communication with the B2C and B2B teams to confirm that localizing content was not a priority – we
+						were happy keeping B2C all in English, and B2B all in Japanese
+					</li>
+					<li>Removing the language toggle entirely in favor of a B2B/B2C toggle</li>
+					<li>
+						Identifying the best copy to make this toggle clear – I ended up adding a navbar link with Japanese
+						copy and an English tooltip on hover to the B2C site, and added a similar navbar link on the B2B site
+						(English copy, Japanese tooltip on hover). This prioritized visibility in each audience's primary
+						language, while still allowing other users to understand the meaning of the toggle via hover.
+					</li>
+				</ul>
+				<p>
+					In the following months, I tracked traffic via our analytics dashboard and confirmed that we now had
+					higher traffic heading to our B2B pages. Moreover, after attending the DXPO, the B2B Marketing Manager
+					and I reviewed our site data and confirmed a higher average scroll percentage, and higher average number
+					of clicks on the redesigned Home and Corporate Training pages.
+				</p>
+			</CaseStudyBlock>
+
+			<div class="cta-wrap">
+				<a class="cta-button" href="/">&larr; Home</a>
+			</div>
+		</main>
+	</div>
+	<SiteFooter />
+</BaseLayout>
+
+<style>
+	.hero {
+		display: flex;
+		flex-direction: column;
+		padding: var(--space-padding-large);
+		gap: var(--space-padding-medium);
+	}
+
+	.back-link {
+		display: flex;
+		align-items: center;
+		gap: var(--space-micro);
+		width: fit-content;
+		text-decoration: none;
+		color: var(--color-dark-gray);
+		font-family: var(--font-display);
+		font-size: var(--text-micro);
+		transition: color 0.2s ease;
+	}
+
+	.back-link:hover {
+		color: var(--color-medium-green);
+	}
+
+	.hero__body {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-padding-large);
+	}
+
+	.hero__heading {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-medium);
+	}
+
+	.hero__heading h1 {
+		margin: 0;
+		font-family: var(--font-display);
+		font-size: var(--text-h1);
+		font-weight: 500;
+	}
+
+	.hero__company {
+		font-size: var(--text-micro);
+		color: var(--color-light-grey);
+	}
+
+	.hero__image {
+		aspect-ratio: 2000 / 1125;
+		border: 1px solid var(--color-dark-gray);
+		border-radius: 5px;
+		overflow: hidden;
+	}
+
+	.hero__image img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.hero__body hr {
+		width: 100%;
+		height: 1px;
+		margin: 0;
+		border: none;
+		background-color: var(--color-light-grey);
+		border-radius: 5px;
+	}
+
+	.hero__body p {
+		margin: 0;
+		font-size: var(--text-body);
+		line-height: 1.5;
+	}
+
+	.hero__skills {
+		font-size: var(--text-micro);
+		color: var(--color-light-grey);
+	}
+
+	.summary {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-padding-medium);
+		padding: var(--space-padding-large);
+	}
+
+	.summary h2 {
+		margin: 0;
+		font-family: var(--font-display);
+		font-size: var(--text-h2);
+		font-weight: 500;
+	}
+
+	.summary p {
+		margin: 0;
+		font-size: var(--text-body);
+		line-height: 1.5;
+	}
+
+	.summary ul {
+		margin: 0;
+		padding-left: 1.2em;
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-medium);
+		font-size: var(--text-body);
+		line-height: 1.5;
+	}
+
+	.cta-wrap {
+		padding: 0 var(--space-padding-large) var(--space-padding-large);
+	}
+
+	.cta-button {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 33px;
+		border: 1px solid var(--color-dark-gray);
+		border-radius: 18px;
+		background-color: var(--color-light-purple);
+		font-family: var(--font-display);
+		font-size: var(--text-micro);
+		text-decoration: none;
+		color: var(--color-dark-gray);
+		transition: filter 0.2s ease;
+	}
+
+	.cta-button:hover {
+		filter: brightness(0.93);
+	}
+</style>
