@@ -4,8 +4,22 @@ import SocialLinks from './SocialLinks.astro';
 
 <footer class="site-footer">
 	<SocialLinks />
-	<p>Designed and built by sivani</p>
+	<div class="site-footer__text">
+		<p>Designed and built by sivani</p>
+		<p>Tokyo, <span class="site-footer__year">2026</span></p>
+	</div>
 </footer>
+
+<script>
+	// Static build, so this can't just be computed once at build time — the
+	// page would keep showing whatever year it happened to be last deployed
+	// until the next rebuild. Reading the visitor's own clock client-side
+	// keeps it correct indefinitely with no rebuild needed.
+	const yearEl = document.querySelector('.site-footer__year');
+	if (yearEl) {
+		yearEl.textContent = String(new Date().getFullYear());
+	}
+</script>
 
 <style>
 	.site-footer {
@@ -13,11 +27,24 @@ import SocialLinks from './SocialLinks.astro';
 		flex-direction: column;
 		align-items: center;
 		gap: var(--space-medium);
-		padding: var(--space-padding-large);
-		background-color: var(--color-light-purple);
+		padding: calc(var(--space-padding-large) * 1.5) var(--space-padding-large);
+		/* Fades in from the page's own background color instead of a hard
+		   edge, mirroring how SiteHeader.astro's pattern fades out at its
+		   bottom edge — both vars are theme-aware (redefined under
+		   [data-theme='dark']), so this blends correctly in both modes
+		   without a separate dark-mode override. */
+		background: linear-gradient(to bottom, var(--color-cream), var(--color-light-purple) 160px);
+	}
+
+	.site-footer__text {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: var(--space-tiny);
 	}
 
 	.site-footer p {
+		margin: 0;
 		font-size: var(--text-micro);
 		color: var(--color-light-grey);
 		text-align: center;

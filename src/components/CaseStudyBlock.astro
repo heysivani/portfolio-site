@@ -1,12 +1,13 @@
 ---
 interface Props {
 	title: string;
+	id?: string;
 }
 
-const { title } = Astro.props;
+const { title, id } = Astro.props;
 ---
 
-<section class="case-study-block">
+<section id={id} class:list={['case-study-block', { 'case-study-anchor': !!id }]}>
 	<h3>{title}</h3>
 	<div class="case-study-block__body">
 		<slot />

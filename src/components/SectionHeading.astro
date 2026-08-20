@@ -3,13 +3,14 @@ interface Props {
 	text: string;
 	topPadded?: boolean;
 	tinted?: boolean;
+	id?: string;
 }
 
-const { text, topPadded = false, tinted = false } = Astro.props;
+const { text, topPadded = false, tinted = false, id } = Astro.props;
 const triangles = [0, 1, 2];
 ---
 
-<div class:list={['section-heading', { 'full-bleed section-heading--tinted': tinted }]}>
+<div id={id} class:list={['section-heading', { 'full-bleed section-heading--tinted': tinted, 'case-study-anchor': !!id }]}>
 	<div class:list={['section-heading__inner', { 'section-heading__inner--top-padded': topPadded }]}>
 		<div class="marker-group marker-group--left">
 			{
