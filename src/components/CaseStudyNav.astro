@@ -23,12 +23,24 @@ const deepDiveSections = [
 	overflow this 0x0 box since overflow isn't clipped here.
 -->
 <div class="case-study-nav">
-	<nav class="case-study-nav__inner" aria-label="Case study sections">
-		<svg class="case-study-nav__marker" viewBox="0 0 12 14" aria-hidden="true">
-			<path d="M0 0 L12 7 L0 14 Z" />
+	<button
+		type="button"
+		class="case-study-nav__mobile-trigger"
+		aria-expanded="false"
+		aria-controls="case-study-nav-panel"
+	>
+		<span class="case-study-nav__mobile-label" data-nav-current-label>Now reading: Top</span>
+		<svg class="case-study-nav__chevron" viewBox="0 0 12 8" aria-hidden="true">
+			<path d="M1 1L6 6L11 1" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" />
 		</svg>
-		<p class="case-study-nav__title">Table of Contents</p>
-		<ul class="case-study-nav__list">
+	</button>
+	<nav class="case-study-nav__inner" id="case-study-nav-panel" aria-label="Case study sections">
+		<p class="case-study-nav__title">Contents</p>
+		<div class="case-study-nav__list-wrap">
+			<svg class="case-study-nav__marker" viewBox="0 0 12 14" aria-hidden="true">
+				<path d="M0 0 L12 7 L0 14 Z" />
+			</svg>
+			<ul class="case-study-nav__list">
 			{
 				topLevelSections.map((section) => (
 					<li>
@@ -54,7 +66,8 @@ const deepDiveSections = [
 					}
 				</ul>
 			</li>
-		</ul>
+			</ul>
+		</div>
 	</nav>
 </div>
 
@@ -71,8 +84,46 @@ const deepDiveSections = [
 		navEls.forEach((navEl) => {
 			const inner = navEl.querySelector('.case-study-nav__inner');
 			const marker = navEl.querySelector('.case-study-nav__marker');
+			const listWrap = navEl.querySelector('.case-study-nav__list-wrap');
 			const links = navEl.querySelectorAll('a[data-nav-id]');
+			const trigger = navEl.querySelector('.case-study-nav__mobile-trigger');
+			const mobileLabel = navEl.querySelector('.case-study-nav__mobile-label');
 			if (!inner || !marker) return;
+
+			// Mobile-only dropdown open/close. Irrelevant at desktop widths
+			// (the trigger is hidden there via CSS) but harmless to wire up
+			// unconditionally rather than gating on viewport width.
+			const closeMobilePanel = () => {
+				navEl.classList.remove('is-open');
+				trigger?.setAttribute('aria-expanded', 'false');
+			};
+
+			trigger?.addEventListener('click', () => {
+				const isOpen = navEl.classList.toggle('is-open');
+				trigger.setAttribute('aria-expanded', String(isOpen));
+				// The marker's Y offset is measured from live getBoundingClientRect()
+				// calls (see applyActive below), which return a zero rect while
+				// .case-study-nav__inner is display:none — i.e. every time the
+				// panel was closed, including all the scroll-driven updates that
+				// ran while it sat collapsed. Recompute now that it's actually
+				// visible and has real layout, so the marker lands on the right
+				// link instead of wherever it was last (incorrectly) measured.
+				if (isOpen) update();
+			});
+
+			document.addEventListener('click', (event) => {
+				if (!navEl.classList.contains('is-open')) return;
+				if (event.target instanceof Node && !navEl.contains(event.target)) {
+					closeMobilePanel();
+				}
+			});
+
+			document.addEventListener('keydown', (event) => {
+				if (event.key === 'Escape' && navEl.classList.contains('is-open')) {
+					closeMobilePanel();
+					trigger?.focus();
+				}
+			});
 
 			const targets = targetIds
 				.map((id) => ({ id, el: document.getElementById(id) }))
@@ -105,10 +156,24 @@ const deepDiveSections = [
 				});
 
 				if (activeLink) {
-					const innerRect = inner.getBoundingClientRect();
+					// The marker's CSS transform is an offset from its actual
+					// positioned ancestor, which differs by breakpoint: mobile
+					// (.case-study-nav__list-wrap, needed to center that block —
+					// see <style> below) vs desktop (.case-study-nav__inner, the
+					// original layout — .case-study-nav__list-wrap reverts to
+					// position: static there, see the 1024px query). marker is
+					// an <svg>, and SVG elements don't support offsetParent the
+					// way HTML elements do (it reads back null even when open),
+					// so the reference is picked explicitly from computed style
+					// instead.
+					const referenceEl =
+						listWrap && getComputedStyle(listWrap).position !== 'static' ? listWrap : inner;
+					const referenceRect = referenceEl.getBoundingClientRect();
 					const linkRect = activeLink.getBoundingClientRect();
-					const markerY = linkRect.top - innerRect.top + linkRect.height / 2 - 7;
+					const markerY = linkRect.top - referenceRect.top + linkRect.height / 2 - 7;
 					navEl.style.setProperty('--case-study-nav-marker-y', `${markerY}px`);
+
+					if (mobileLabel) mobileLabel.textContent = `Now reading: ${activeLink.textContent?.trim() ?? ''}`;
 				}
 			};
 
@@ -157,6 +222,7 @@ const deepDiveSections = [
 				link.addEventListener('click', () => {
 					suppressScrollDetection = true;
 					applyActive(link.dataset.navId);
+					closeMobilePanel();
 					// 'scrollend' (widely supported since 2024) is the precise
 					// signal that the browser's own smooth-scroll animation
 					// has settled. The timeout is only a safety net for
@@ -172,14 +238,167 @@ const deepDiveSections = [
 
 			update();
 			window.addEventListener('scroll', onScroll, { passive: true });
-			window.addEventListener('resize', onScroll);
+			window.addEventListener('resize', () => {
+				onScroll();
+				// The mobile trigger is hidden by CSS at desktop widths, so a
+				// dropdown left open before resizing past that breakpoint
+				// would otherwise have no visible way to close.
+				if (window.innerWidth >= 1024) closeMobilePanel();
+			});
 		});
 	}
 </script>
 
 <style>
+	/* Mobile/tablet (below 1024px): a full-width sticky bar right under the
+	   header, collapsed to just the current section's name + a chevron.
+	   Tapping it drops down the same section list desktop uses in
+	   .case-study-nav__inner — same markup, repurposed as a dropdown panel
+	   instead of an absolutely-positioned side column. Desktop (see the
+	   1024px query below) resets nearly every property here back to the
+	   original margin-column layout. */
 	.case-study-nav {
+		position: sticky;
+		/* Matches SiteHeader's height at this breakpoint (124px, see
+		   SiteHeader.astro) so the bar sits flush under it with no gap. */
+		top: 124px;
+		z-index: 9;
+		background-color: var(--color-light-purple);
+		/* Same break-out-of-.content's-centered-column technique as the
+		   global .full-bleed utility (see global.css): width: 100% alone
+		   isn't actually full width here, since .case-study-body sits inside
+		   .content's max-width column, which is already narrower than the
+		   viewport well below the 1024px desktop breakpoint — that's what
+		   was making the bar look "sometimes not full width" while
+		   resizing, not a rendering glitch. --viewport-width (kept live by
+		   BaseLayout.astro's resize listener) tracks the true viewport
+		   continuously, so this stays full-bleed smoothly through a resize
+		   instead of only being correct at specific widths. */
+		width: var(--viewport-width, 100vw);
+		margin-left: calc(50% - var(--viewport-width, 100vw) / 2);
+	}
+
+	@media (min-width: 600px) {
+		.case-study-nav {
+			/* SiteHeader grows to 150px at this breakpoint. */
+			top: 150px;
+		}
+	}
+
+	.case-study-nav__mobile-trigger {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: var(--space-small);
+		width: 100%;
+		margin: 0;
+		padding: var(--space-medium) var(--space-padding-medium) var(--space-large);
+		background: none;
+		border: none;
+		font-family: var(--font-body);
+		font-size: 17px;
+		font-weight: 700;
+		color: var(--color-dark-gray);
+		cursor: pointer;
+	}
+
+	.case-study-nav__chevron {
+		width: 10px;
+		height: 7px;
+		flex-shrink: 0;
+		color: var(--color-medium-green);
+		transition: transform 0.2s ease;
+	}
+
+	.case-study-nav.is-open .case-study-nav__chevron {
+		transform: rotate(180deg);
+	}
+
+	.case-study-nav__marker {
+		position: absolute;
+		/* Sits in the gutter .case-study-nav__list reserves via its own
+		   padding-left (see below) — relative to .case-study-nav__list-wrap,
+		   which is exactly the list's own box (the wrap has no padding of
+		   its own), so 0 lines the marker up flush with the list's left
+		   edge regardless of where centering (see .case-study-nav__inner)
+		   ends up placing that box. */
+		left: 0;
+		top: 0;
+		width: 10px;
+		height: 14px;
+		transform: translateY(var(--case-study-nav-marker-y, 0px));
+		transition: transform 0.2s ease;
+		fill: var(--color-medium-purple);
+	}
+
+	.case-study-nav__title {
 		display: none;
+	}
+
+	.case-study-nav__inner {
+		display: none;
+		position: absolute;
+		top: 100%;
+		left: 0;
+		right: 0;
+		background-color: var(--color-light-purple);
+		padding: 0 var(--space-padding-medium) var(--space-padding-medium);
+		max-height: calc(100vh - 170px);
+		overflow-y: auto;
+	}
+
+	.case-study-nav.is-open .case-study-nav__inner {
+		display: flex;
+		/* Centers .case-study-nav__list-wrap (which shrinks to the width of
+		   its widest link) as a block within the panel, while the links
+		   inside it keep reading left-aligned relative to each other —
+		   centering the block itself, not the text within it. */
+		justify-content: center;
+	}
+
+	.case-study-nav__list-wrap {
+		position: relative;
+	}
+
+	.case-study-nav__list {
+		margin: 0;
+		padding: 0;
+		/* Reserves room for .case-study-nav__marker, which sits absolutely
+		   positioned in this gutter (see that rule above). */
+		padding-left: var(--space-large);
+		list-style: none;
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-medium);
+	}
+
+	.case-study-nav__sublist {
+		margin: var(--space-medium) 0 0;
+		padding: 0;
+		list-style: none;
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-medium);
+		padding-left: var(--space-large);
+	}
+
+	.case-study-nav__list a {
+		display: block;
+		text-decoration: none;
+		font-family: var(--font-body);
+		font-size: var(--text-body);
+		font-weight: 700;
+		color: var(--color-light-grey);
+		transition: color 0.2s ease;
+	}
+
+	.case-study-nav__sublist a {
+		font-weight: 400;
+	}
+
+	.case-study-nav__list a.is-parent-active,
+	.case-study-nav__list a.is-active {
+		color: var(--color-dark-gray);
 	}
 
 	@media (min-width: 1024px) {
@@ -196,10 +415,36 @@ const deepDiveSections = [
 			top: 170px;
 			width: 0;
 			height: 0;
+			margin-left: 0;
 			overflow: visible;
+			z-index: auto;
+			background: none;
+			border-bottom: none;
+		}
+
+		.case-study-nav__mobile-trigger {
+			display: none;
+		}
+
+		.case-study-nav__marker {
+			display: block;
+		}
+
+		.case-study-nav__title {
+			display: block;
+		}
+
+		.case-study-nav__list-wrap {
+			/* Reverts to a plain in-flow wrapper — .case-study-nav__marker
+			   falls back to positioning relative to .case-study-nav__inner
+			   instead (this component's original, unchanged desktop layout;
+			   see that rule further below), exactly as before this wrapper
+			   existed. */
+			position: static;
 		}
 
 		.case-study-nav__inner {
+			display: block;
 			position: absolute;
 			/* Matches the hero section's own padding-top (the "Home" back
 			   link right after this component uses it), so the nav's first
@@ -216,6 +461,11 @@ const deepDiveSections = [
 			   reasonable point on ultra-wide screens. */
 			left: calc(-132px - clamp(18px, 18px + (100vw - 1024px) * 0.08, 90px));
 			width: 132px;
+			background: none;
+			border-bottom: none;
+			padding: 0;
+			max-height: none;
+			overflow-y: visible;
 		}
 
 		.case-study-nav__marker {
@@ -263,6 +513,7 @@ const deepDiveSections = [
 			text-decoration: none;
 			font-family: var(--font-body);
 			font-size: var(--text-small);
+			font-weight: 400;
 			color: var(--color-light-grey);
 			transition: color 0.2s ease;
 		}
