@@ -39,6 +39,10 @@ const abilities = ['Design', 'Writing', 'Coding'];
 						}
 					</ul>
 				</div>
+				<a class="resume-link" href="/sivani-resume.pdf" download>
+					<img src="/icons/download.svg" alt="" width="16" height="16" />
+					<span>Resume</span>
+				</a>
 			</div>
 		</div>
 
@@ -125,6 +129,22 @@ const abilities = ['Design', 'Writing', 'Coding'];
 	}
 
 	const photo = document.querySelector('.photo');
+	const stats = document.querySelector('.stats');
+
+	if (photo instanceof HTMLElement && stats instanceof HTMLElement) {
+		// Keeps .photo's height matched to .stats' actual rendered height (it
+		// grows with content like the resume link below abilities), so its
+		// bottom edge always lines up with the bottom of that column. Width
+		// isn't set directly — aspect-ratio (see stylesheet) derives it from
+		// this height, so the photo scales up uniformly instead of re-cropping.
+		const syncPhotoHeight = () => {
+			photo.style.height = `${stats.getBoundingClientRect().height}px`;
+		};
+
+		syncPhotoHeight();
+		new ResizeObserver(syncPhotoHeight).observe(stats);
+	}
+
 	const photoFrame = photo instanceof HTMLElement ? photo.querySelector('.photo__frame') : null;
 
 	if (photoFrame instanceof HTMLElement && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -276,24 +296,28 @@ const abilities = ['Design', 'Writing', 'Coding'];
 	.photo {
 		position: relative;
 		flex-shrink: 0;
-		width: 145px;
+		aspect-ratio: 145 / 138;
+		width: auto;
 		height: 138px;
 		animation: pop-in 0.5s ease-out both;
 	}
 
-	/* Scaled proportionally (same aspect ratio) at the same breakpoints as
-	   the global type scale, since it's a fixed pixel size rather than a
-	   design token. */
+	/* This default height is scaled proportionally (same aspect ratio) at the
+	   same breakpoints as the global type scale, since it's a fixed pixel
+	   size rather than a design token — it's also the pre-JS/no-JS fallback.
+	   The script below overrides it with an inline height matching the stats
+	   column (photo's flex sibling) exactly, including the resume link row
+	   below abilities, so its bottom edge always lines up with the bottom of
+	   that column; width then follows from aspect-ratio, so the photo grows
+	   uniformly (no re-cropping) rather than stretching. */
 	@media (min-width: 600px) {
 		.photo {
-			width: 165px;
 			height: 157px;
 		}
 	}
 
 	@media (min-width: 1024px) {
 		.photo {
-			width: 185px;
 			height: 176px;
 		}
 	}
@@ -457,6 +481,17 @@ const abilities = ['Design', 'Writing', 'Coding'];
 		animation-delay: 0.4s;
 	}
 
+	.resume-link {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		font-size: var(--text-micro);
+		color: var(--color-light-grey);
+		text-decoration: underline;
+		animation: pop-in 0.5s ease-out both;
+		animation-delay: 0.48s;
+	}
+
 	@keyframes pop-in {
 		0% {
 			opacity: 0;
@@ -477,6 +512,7 @@ const abilities = ['Design', 'Writing', 'Coding'];
 		.stat,
 		.abilities__label,
 		.abilities li,
+		.resume-link,
 		.bar-label,
 		.bio-text {
 			animation: none;
