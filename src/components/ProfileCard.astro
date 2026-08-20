@@ -232,6 +232,10 @@ const abilities = ['Design', 'Writing', 'Coding'];
 		background-color: var(--color-light-green);
 	}
 
+	:global([data-theme='dark']) .profile-card__header.is-flipped {
+		background-color: var(--color-dark-purple);
+	}
+
 	@media (prefers-reduced-motion: reduce) {
 		.profile-card__header {
 			transition: none;
@@ -314,6 +318,10 @@ const abilities = ['Design', 'Writing', 'Coding'];
 
 	.photo__frame.is-flipped {
 		background-color: var(--color-light-green);
+	}
+
+	:global([data-theme='dark']) .photo__frame.is-flipped {
+		background-color: var(--color-dark-purple);
 	}
 
 	.photo__frame.is-flipped .photo__crop {

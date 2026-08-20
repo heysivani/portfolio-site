@@ -185,4 +185,8 @@ const { href, image, title, description, skills } = Astro.props;
 		font-family: var(--font-display);
 		font-size: var(--text-micro);
 	}
+
+	:global([data-theme='dark']) .project-card__cta {
+		background-color: var(--color-dark-purple);
+	}
 </style>
