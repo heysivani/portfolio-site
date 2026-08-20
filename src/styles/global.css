@@ -170,12 +170,14 @@ p {
 
 @media (min-width: 1440px) {
   :root {
-    --content-max-width: 1040px;
+    /* Ceiling: content stops growing past this point, so it stays 940px
+       all the way up through the 1920px tier below too. */
+    --content-max-width: 940px;
   }
 }
 
 @media (min-width: 1920px) {
   :root {
-    --content-max-width: 1400px;
+    --content-max-width: 940px;
   }
 }
