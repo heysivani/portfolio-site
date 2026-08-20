@@ -37,23 +37,30 @@ const { href, image, title, action, impact, skills } = Astro.props;
 </a>
 
 <script>
-	// Keeps .project-card__image's height matched to .project-card__details'
-	// rendered height at desktop (so the image's bottom edge lines up with
-	// the divider closing out that column), with width following from
-	// aspect-ratio so it scales up uniformly instead of distorting. Mirrors
-	// ProfileCard's photo/stats height sync — .details must stay off the
-	// grid row's default stretch (see align-self:start in the stylesheet)
-	// so its rendered height always reflects its own content, never
-	// .image's last-set height.
+	// .project-card__image's size is pure CSS at desktop (a fixed fraction
+	// of the row via grid-template-columns, height following from
+	// aspect-ratio) — deliberately NOT derived from .project-card__details'
+	// content. An earlier version tried to size the image to match
+	// .details' rendered height, with width following from aspect-ratio,
+	// but .image's width ate into .details' available grid column width,
+	// which could reflow its text onto more lines and change ITS height —
+	// and for long enough copy at a narrow enough row that feedback loop
+	// genuinely never settled (traced it: the height climbed
+	// 230 -> 284 -> 338 -> 419 -> 608 -> 797 -> ... with no sign of
+	// leveling off). A fixed image width sidesteps that entirely: it no
+	// longer depends on .details' content at all, so .details' width (and
+	// therefore its text-wrap height, for a given font-size) is stable too.
 	//
-	// Unlike the profile card, one pass isn't enough here: .image's WIDTH
-	// (derived from the height we're about to set) eats into .details'
-	// available width via the grid's 1fr column, which can reflow its text
-	// onto a different number of lines and change ITS height too — so each
-	// guess is re-measured and corrected a few more times until it stops
-	// moving, instead of trusting the first measurement.
-	const ASPECT_RATIO = 244 / 195;
-	const MAX_ITERATIONS = 5;
+	// With .image's height now a stable target instead of a moving one,
+	// this scales .details' font-size (via the --card-text-scale custom
+	// property the stylesheet's font-size rules read) down or up until its
+	// rendered height matches — a one-directional fit, not a feedback loop,
+	// so it's solved with an ordinary binary search rather than needing to
+	// guard against divergence.
+	const MIN_SCALE = 0.55;
+	const DESIGNED_SCALE = 1;
+	const SEARCH_STEPS = 12;
+	const TOLERANCE = 0.5;
 
 	document.querySelectorAll('.project-card').forEach((card) => {
 		const image = card.querySelector('.project-card__image');
@@ -63,31 +70,72 @@ const { href, image, title, action, impact, skills } = Astro.props;
 			return;
 		}
 
-		const syncImageSize = () => {
-			const isDesktop = window.matchMedia('(min-width: 1024px)').matches;
+		// gapCount: the number of gaps grown to close a shortfall (see
+		// below) — one less than the number of children, since gap only
+		// adds space *between* .details' hr/action-impact/hr children.
+		const gapCount = details.children.length - 1;
+
+		const heightAtScale = (scale) => {
+			details.style.setProperty('--card-text-scale', String(scale));
+			return details.getBoundingClientRect().height;
+		};
+
+		const syncDetailsScale = () => {
+			const isDesktop = window.matchMedia('(min-width: 1280px)').matches;
 
 			if (!isDesktop) {
-				image.style.height = '';
-				image.style.width = '';
+				details.style.removeProperty('--card-text-scale');
+				details.style.removeProperty('--card-gap-extra');
 				return;
 			}
 
-			image.style.height = '';
-			image.style.width = '';
-			let height = details.getBoundingClientRect().height;
+			details.style.removeProperty('--card-gap-extra');
+			const targetHeight = image.getBoundingClientRect().height;
+			const designedHeight = heightAtScale(DESIGNED_SCALE);
+			let currentHeight = designedHeight;
 
-			for (let i = 0; i < MAX_ITERATIONS; i++) {
-				image.style.height = `${height}px`;
-				image.style.width = `${height * ASPECT_RATIO}px`;
+			if (designedHeight > targetHeight + TOLERANCE) {
+				// Too tall: binary search for the largest scale, down to
+				// MIN_SCALE, whose rendered height still fits — shrinking
+				// font-size is monotonically non-increasing in height (for
+				// a fixed width), so this always converges, unlike sizing
+				// the image off .details' content used to. Line-wrapping
+				// only removes whole lines, though, so the result can still
+				// land a bit short of an exact match — the gap-based fix
+				// below closes whatever's left either way.
+				let lo = MIN_SCALE;
+				let hi = DESIGNED_SCALE;
 
-				const nextHeight = details.getBoundingClientRect().height;
-				if (nextHeight === height) break;
-				height = nextHeight;
+				for (let i = 0; i < SEARCH_STEPS; i++) {
+					const mid = (lo + hi) / 2;
+					if (heightAtScale(mid) <= targetHeight + TOLERANCE) {
+						lo = mid;
+					} else {
+						hi = mid;
+					}
+				}
+
+				currentHeight = heightAtScale(lo);
+			}
+
+			// Closes whatever gap remains — whether .details started short,
+			// or the shrink search above still landed a bit under the
+			// target — by growing .details' own gap (see --card-gap-extra
+			// in the stylesheet) rather than the font. Growing font-size
+			// instead would only be able to change height in discrete
+			// jumps, whenever it's large enough to trigger an extra wrapped
+			// line — confirmed by testing, a target height can land in
+			// between two of those jumps with no scale that reaches it.
+			// Gap has no such step: adding the exact shortfall, split
+			// evenly across every gap, closes it precisely every time.
+			if (currentHeight < targetHeight - TOLERANCE) {
+				const extra = (targetHeight - currentHeight) / gapCount;
+				details.style.setProperty('--card-gap-extra', `${extra}px`);
 			}
 		};
 
-		syncImageSize();
-		new ResizeObserver(syncImageSize).observe(details);
+		syncDetailsScale();
+		new ResizeObserver(syncDetailsScale).observe(card);
 	});
 </script>
 
@@ -162,7 +210,10 @@ const { href, image, title, action, impact, skills } = Astro.props;
 
 	.project-card__details p {
 		margin: 0;
-		font-size: var(--text-body);
+		/* --card-text-scale is set by the script above, desktop-only — see
+		   its comment there. Unset (mobile, or if JS doesn't run) resolves
+		   to 1, i.e. the same var(--text-body) as always. */
+		font-size: calc(var(--text-body) * var(--card-text-scale, 1));
 		line-height: 1.5;
 	}
 
@@ -181,7 +232,7 @@ const { href, image, title, action, impact, skills } = Astro.props;
 	.project-card__label {
 		margin: 0;
 		font-family: var(--font-display);
-		font-size: var(--text-h3);
+		font-size: calc(var(--text-h3) * var(--card-text-scale, 1));
 		font-weight: 400;
 		color: var(--color-light-grey);
 	}
@@ -213,13 +264,22 @@ const { href, image, title, action, impact, skills } = Astro.props;
 	   its own full-width row above the image, the image becomes a fixed-size
 	   thumbnail (not a full-height banner) sitting beside the action/impact
 	   details, and the skills line drops out of that details column to its
-	   own full-width row below both. Below 1024px (including the 600px
-	   tablet tier) is untouched — same elements, same DOM order, just a grid
-	   instead of the ordered flex column above this point. */
-	@media (min-width: 1024px) {
+	   own full-width row below both. Below 1280px (including the 600px and
+	   1024px tiers) is untouched — same elements, same DOM order, just a
+	   grid instead of the ordered flex column above this point. 1280px
+	   (not the usual 1024px desktop tier) matches Hero's own breakpoint, so
+	   both switch to their desktop layout together instead of the cards
+	   staying in desktop form for a stretch after the hero's already
+	   dropped back to mobile. */
+	@media (min-width: 1280px) {
 		.project-card__body {
 			display: grid;
-			grid-template-columns: auto 1fr;
+			/* A fixed ratio, not auto/content-sized: .image's width used to be
+			   derived from .details' content (to match its height), but that
+			   fed back into .details' own available width — see the script
+			   above for why that broke down. minmax(0, Nfr), not bare Nfr: a
+			   bare fr track still has an implicit content-based minimum. */
+			grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
 			grid-template-areas:
 				'title title'
 				'image details'
@@ -233,29 +293,28 @@ const { href, image, title, action, impact, skills } = Astro.props;
 
 		.project-card__image {
 			grid-area: image;
-			/* Real sizing is inline, from the script above — .project-card__body
-			   is a grid, and letting height:100%/aspect-ratio drive an "auto"
-			   grid column's width (rather than a definite pixel value the way
-			   the script sets it) produced runaway widths in testing: the
-			   browser's track-sizing pass fed the row's content-driven height
-			   back into the aspect-ratio width calculation before that height
-			   was actually final. This is just the pre-JS/no-JS fallback.
-			   aspect-ratio here (rather than a fixed height) is what makes
-			   object-fit:cover below actually crop correctly if JS doesn't
-			   run. */
-			width: 244px;
+			/* Fills its now-fixed grid column exactly; height just follows
+			   from aspect-ratio. No JS involved in sizing this element at
+			   all — see the script above for why that's deliberate. */
+			width: 100%;
 			aspect-ratio: 244 / 195;
 		}
 
 		.project-card__details {
 			grid-area: details;
-			/* Off the grid row's default stretch: the height-sync script
-			   above reads this element's rendered height to size .image, and
-			   if this stretched to match .image in turn, that height would
-			   keep echoing itself back on every resize instead of tracking
-			   this column's real content height. */
+			/* Off the grid row's default stretch: without this, a .details
+			   shorter than .image would get stretched to match its height,
+			   but flex packs children at the top by default, so the closing
+			   divider (this column's last child) would sit above that
+			   stretched box's true bottom — right where the "too short"
+			   branch in the script above needs to measure it, so it can
+			   tell there's a gap to grow into instead of seeing it as
+			   already full. */
 			align-self: start;
-			gap: 10px;
+			/* --card-gap-extra is set by the script above, desktop-only, only
+			   when .details' designed-size content is shorter than .image —
+			   see its comment there. Unset resolves to 0px. */
+			gap: calc(10px + var(--card-gap-extra, 0px));
 		}
 
 		.project-card__skills {
