@@ -1,7 +1,7 @@
 ---
 import SocialLinks from './SocialLinks.astro';
 
-const abilities = ['UX research', 'UI design', 'Coding'];
+const abilities = ['Design', 'Writing', 'Coding'];
 ---
 
 <div class="profile-card">
@@ -19,10 +19,6 @@ const abilities = ['UX research', 'UI design', 'Coding'];
 			</div>
 			<div class="stats">
 				<div class="stats__info">
-					<div class="stat">
-						<img src="/icons/skull.svg" alt="" width="15" height="14" />
-						<span>Level unknown</span>
-					</div>
 					<div class="stat">
 						<img src="/icons/location.svg" alt="" width="12" height="15" />
 						<span>Tokyo</span>
@@ -43,6 +39,10 @@ const abilities = ['UX research', 'UI design', 'Coding'];
 						}
 					</ul>
 				</div>
+				<a class="resume-link" href="/sivani-resume.pdf" download>
+					<img src="/icons/download.svg" alt="" width="16" height="16" />
+					<span>Resume</span>
+				</a>
 			</div>
 		</div>
 
@@ -58,8 +58,8 @@ const abilities = ['UX research', 'UI design', 'Coding'];
 		</div>
 
 		<p class="bio-text">
-			Full-stack UX + UI product designer powered by a game design degree and a background in coding and ed tech. Values
-			data-driven decisions, clarity, and kindness. Writer of an award-nominated game that has been exhibited worldwide.
+			Full-stack UX/UI product designer powered by a game design degree and a background in coding and ed tech. Writer of
+			an award-nominated game that has been exhibited worldwide. Values data-driven decisions, clarity, and kindness.
 		</p>
 
 		<SocialLinks animate startDelay={0} />
@@ -74,9 +74,11 @@ const abilities = ['UX research', 'UI design', 'Coding'];
 		let triggerLine = 0;
 		let rampDistance = 1;
 
-		// medium-green -> light-green, matching --color-medium-green / --color-light-green
+		// medium-green -> light-green in light mode, medium-green -> dark-purple in dark
+		// mode, matching --color-medium-green / --color-light-green/--color-dark-purple
 		const fromColor = [83, 196, 156];
-		const toColor = [213, 238, 216];
+		const toColorLight = [213, 238, 216];
+		const toColorDark = [70, 49, 80];
 
 		const measure = () => {
 			// Animation doesn't start until the triangles have scrolled up past a
@@ -94,6 +96,7 @@ const abilities = ['UX research', 'UI design', 'Coding'];
 			const progress = window.scrollY <= 0 ? 0 : Math.max(0, Math.min(1, (triggerLine - rect.top) / rampDistance));
 			abilities.style.setProperty('--ability-progress', progress.toFixed(3));
 
+			const toColor = document.documentElement.dataset.theme === 'dark' ? toColorDark : toColorLight;
 			const [r, g, b] = fromColor.map((from, i) => Math.round(from + (toColor[i] - from) * progress));
 			abilities.style.setProperty('--ability-color', `rgb(${r}, ${g}, ${b})`);
 
@@ -116,9 +119,32 @@ const abilities = ['UX research', 'UI design', 'Coding'];
 		window.addEventListener('scroll', onScroll, { passive: true });
 		window.addEventListener('resize', onResize);
 		updateProgress();
+
+		// Re-run so a theme toggle mid-session (no scroll involved) still picks
+		// up the light/dark to-color immediately.
+		new MutationObserver(updateProgress).observe(document.documentElement, {
+			attributes: true,
+			attributeFilter: ['data-theme'],
+		});
 	}
 
 	const photo = document.querySelector('.photo');
+	const stats = document.querySelector('.stats');
+
+	if (photo instanceof HTMLElement && stats instanceof HTMLElement) {
+		// Keeps .photo's height matched to .stats' actual rendered height (it
+		// grows with content like the resume link below abilities), so its
+		// bottom edge always lines up with the bottom of that column. Width
+		// isn't set directly — aspect-ratio (see stylesheet) derives it from
+		// this height, so the photo scales up uniformly instead of re-cropping.
+		const syncPhotoHeight = () => {
+			photo.style.height = `${stats.getBoundingClientRect().height}px`;
+		};
+
+		syncPhotoHeight();
+		new ResizeObserver(syncPhotoHeight).observe(stats);
+	}
+
 	const photoFrame = photo instanceof HTMLElement ? photo.querySelector('.photo__frame') : null;
 
 	if (photoFrame instanceof HTMLElement && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -236,6 +262,10 @@ const abilities = ['UX research', 'UI design', 'Coding'];
 		background-color: var(--color-light-green);
 	}
 
+	:global([data-theme='dark']) .profile-card__header.is-flipped {
+		background-color: var(--color-dark-purple);
+	}
+
 	@media (prefers-reduced-motion: reduce) {
 		.profile-card__header {
 			transition: none;
@@ -266,24 +296,28 @@ const abilities = ['UX research', 'UI design', 'Coding'];
 	.photo {
 		position: relative;
 		flex-shrink: 0;
-		width: 145px;
+		aspect-ratio: 145 / 138;
+		width: auto;
 		height: 138px;
 		animation: pop-in 0.5s ease-out both;
 	}
 
-	/* Scaled proportionally (same aspect ratio) at the same breakpoints as
-	   the global type scale, since it's a fixed pixel size rather than a
-	   design token. */
+	/* This default height is scaled proportionally (same aspect ratio) at the
+	   same breakpoints as the global type scale, since it's a fixed pixel
+	   size rather than a design token — it's also the pre-JS/no-JS fallback.
+	   The script below overrides it with an inline height matching the stats
+	   column (photo's flex sibling) exactly, including the resume link row
+	   below abilities, so its bottom edge always lines up with the bottom of
+	   that column; width then follows from aspect-ratio, so the photo grows
+	   uniformly (no re-cropping) rather than stretching. */
 	@media (min-width: 600px) {
 		.photo {
-			width: 165px;
 			height: 157px;
 		}
 	}
 
 	@media (min-width: 1024px) {
 		.photo {
-			width: 185px;
 			height: 176px;
 		}
 	}
@@ -318,6 +352,10 @@ const abilities = ['UX research', 'UI design', 'Coding'];
 
 	.photo__frame.is-flipped {
 		background-color: var(--color-light-green);
+	}
+
+	:global([data-theme='dark']) .photo__frame.is-flipped {
+		background-color: var(--color-dark-purple);
 	}
 
 	.photo__frame.is-flipped .photo__crop {
@@ -374,7 +412,7 @@ const abilities = ['UX research', 'UI design', 'Coding'];
 		display: flex;
 		flex-direction: column;
 		gap: var(--space-medium);
-		justify-content: center;
+		justify-content: flex-start;
 	}
 
 	.stats__info {
@@ -390,14 +428,6 @@ const abilities = ['UX research', 'UI design', 'Coding'];
 		font-size: var(--text-micro);
 		color: var(--color-light-grey);
 		animation: pop-in 0.5s ease-out both;
-	}
-
-	.stat:nth-child(1) {
-		animation-delay: 0s;
-	}
-
-	.stat:nth-child(2) {
-		animation-delay: 0.08s;
 	}
 
 	.stat img {
@@ -451,6 +481,17 @@ const abilities = ['UX research', 'UI design', 'Coding'];
 		animation-delay: 0.4s;
 	}
 
+	.resume-link {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		font-size: var(--text-micro);
+		color: var(--color-light-grey);
+		text-decoration: underline;
+		animation: pop-in 0.5s ease-out both;
+		animation-delay: 0.48s;
+	}
+
 	@keyframes pop-in {
 		0% {
 			opacity: 0;
@@ -471,6 +512,7 @@ const abilities = ['UX research', 'UI design', 'Coding'];
 		.stat,
 		.abilities__label,
 		.abilities li,
+		.resume-link,
 		.bar-label,
 		.bio-text {
 			animation: none;
@@ -543,6 +585,12 @@ const abilities = ['UX research', 'UI design', 'Coding'];
 		.abilities {
 			--ability-progress: 1;
 			--ability-color: var(--color-light-green);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		:global([data-theme='dark']) .abilities {
+			--ability-color: var(--color-dark-purple);
 		}
 	}
 

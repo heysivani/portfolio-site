@@ -8,7 +8,7 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 
 <BaseLayout
 	title="Finding the “why” behind slides | sivani.me"
-	description="UX research to evaluate instructional materials. Resulted in higher quality curriculum materials used across our B2B enterprise and B2C programs, more efficient time allocation for curriculum creators, and a higher level of design maturity within our organization."
+	description="UX research to evaluate instructional materials. Higher quality curriculum materials used across our B2B enterprise and B2C programs, more efficient time allocation for curriculum creators, and a higher level of design maturity within our organization."
 >
 	<SiteHeader />
 	<div class="content">
@@ -36,28 +36,50 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 						<img src="/images/finding-the-why-behind-slides/project-1-title.svg" alt="" />
 					</div>
 					<hr />
-					<p>
-						UX research to evaluate instructional materials. Resulted in higher quality curriculum materials used
-						across our B2B enterprise and B2C programs, more efficient time allocation for curriculum creators, and
-						a higher level of design maturity within our organization.
-					</p>
+					<div class="hero__action-impact">
+						<div class="hero__group">
+							<p class="hero__label">Action</p>
+							<p>UX research to evaluate instructional materials.</p>
+						</div>
+						<div class="hero__group">
+							<p class="hero__label">Impact</p>
+							<p>
+								Higher quality curriculum materials used across our B2B enterprise and B2C programs, more efficient
+								time allocation for curriculum creators, and a higher level of design maturity within our
+								organization.
+							</p>
+						</div>
+					</div>
 					<hr />
 					<p class="hero__skills">
-						Skills: user interviews, stakeholder interviews, usability tests, survey design, heuristic evaluations,
-						competitive analysis, thematic analysis, quantitative and qualitative data analysis, data synthesis,
-						workshop facilitation, ux design, project management
+						<strong>Skills:</strong> user interviews, stakeholder interviews, usability tests, survey design, heuristic
+						evaluations, competitive analysis, thematic analysis, quantitative and qualitative data analysis, data
+						synthesis, workshop facilitation, ux design, project management
 					</p>
 					<p class="hero__note">
-						Note: Some content on this page has been generalized, recreated, or omitted to comply with
+						<strong>Note:</strong> Some content on this page has been generalized, recreated, or omitted to comply with
 						confidentiality agreements.
 					</p>
 				</div>
 			</section>
 
-			<SectionHeading text="Summary" />
+			<SectionHeading text="Summary" topPadded tinted />
 
-			<section class="summary">
-				<h2>Context</h2>
+			<section class="full-bleed summary">
+				<div class="summary__inner">
+					<h3>Impact</h3>
+				<ul>
+					<li>Product team members reallocated their time more effectively</li>
+					<li>
+						Instructional materials were updated to suit differing needs across instructors and students, creating a
+						more tailored and optimal learning experience
+					</li>
+					<li>Improved materials used across all our programs: B2B enterprise and B2C</li>
+					<li>Increased design maturity for our organization by sharing knowledge and design practices</li>
+					<li>Demonstrated one of our company's annual objectives: be more data-driven</li>
+				</ul>
+
+				<h3>Context</h3>
 				<p>
 					My company's main product: B2B and B2C technical training programs for upskilling or career-switching
 					adults to learn software engineering, product design, and product management.
@@ -72,60 +94,49 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 					approach to creating slide decks, and other instructional materials.
 				</p>
 
-				<h2>Process</h2>
+				<h3>Process</h3>
 				<p>
 					I combined a variety of research methods to collect a mix of quantitative and qualitative data, and
 					segmented my participants into the different types of users who used our slide decks and other
 					instructional materials: students, instructors, and Product team members.
 				</p>
 
-				<h2>Key insights</h2>
+				<h3>Key insights</h3>
 				<p>
 					The foundational issue: different participants used the slide decks for different purposes. Different
 					purposes = different needs. And different needs require different solutions.
 				</p>
 
-				<h2>Solutions</h2>
+				<h3>Solutions</h3>
 				<p>
 					We decided to separate concerns across different curriculum materials by creating dedicated study guides
 					for students, and lecture guides for instructors. We also started referencing our curriculum's critical
 					concepts checklist for each topic when creating slide decks for it.
 				</p>
-
-				<h2>Impact</h2>
-				<ul>
-					<li>Product team members reallocated their time more effectively</li>
-					<li>
-						Instructional materials were updated to suit differing needs across instructors and students, creating a
-						more tailored and optimal learning experience
-					</li>
-					<li>Improved materials used across all our programs: B2B enterprise and B2C</li>
-					<li>Increased design maturity for our organization by sharing knowledge and design practices</li>
-					<li>Demonstrated one of our company's annual objectives: be more data-driven</li>
-				</ul>
+				</div>
 			</section>
 
-			<SectionHeading text="Deep dive" />
+			<SectionHeading text="Deep dive" topPadded />
 
 			<CaseStudyBlock title="Context">
 				<div class="case-study-block__image">
 					<img src="/images/finding-the-why-behind-slides/project-1-context.svg" alt="" />
 				</div>
-				<p><strong>The company</strong></p>
+				<h4>The company</h4>
 				<p>
 					My company's main product: B2B and B2C technical training programs for upskilling or career-switching
 					adults to learn software engineering, product design, and product management. The Product team was
 					tasked with creating the curriculum and instructional materials used in all these programs, including
 					programs taught to our global enterprise automotive client.
 				</p>
-				<p><strong>My role</strong></p>
+				<h4>My role</h4>
 				<p>Job title: Product Designer | Teams involved: Product, B2B Instruction, B2C Instruction</p>
 				<p>
 					As the sole designer in my company, I managed and conducted the entire UX research process on my own.
 					Solutions were collaboratively identified with my team (Product), and implemented by the relevant team
 					members.
 				</p>
-				<p><strong>A designer's favorite question</strong></p>
+				<h4>A designer's favorite question</h4>
 				<p>"Can you make it pop?"</p>
 				<p>(Just kidding).</p>
 				<p>
@@ -143,7 +154,7 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 					it! And asking "why" repeatedly is how I found myself leading a multidisciplinary UX research study on
 					slide decks.
 				</p>
-				<p><strong>Why slide decks?</strong></p>
+				<h4>Why slide decks?</h4>
 				<p>As I got to know the Product team, I made the following observations:</p>
 				<ul>
 					<li>Slide decks were the medium most often used for our teaching materials</li>
@@ -152,21 +163,21 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 					<li>Slide decks were showcased as key materials to advertise our programs to prospective B2B clients</li>
 					<li>Slide decks informed what instructors taught… and therefore, what students learned</li>
 				</ul>
-				<p>Considering each point above, I found myself asking: why slide decks?</p>
+				<p>Considering each point above, I found myself asking: <strong>why slide decks?</strong></p>
 				<p>
 					As I went down this line of questioning, I identified a research opportunity lurking behind the core
 					assumptions that were driving my team:
 				</p>
 				<ul>
 					<li>Slide decks are important</li>
-					<li>We already know how instructors and students feel about our slide decks</li>
-					<li>We already know what instructors and students need from our slide decks</li>
+					<li>We already know how instructors and students <strong>feel</strong> about our slide decks</li>
+					<li>We already know what instructors and students <strong>need</strong> from our slide decks</li>
 				</ul>
 				<p>It was time to test these assumptions.</p>
 			</CaseStudyBlock>
 
 			<CaseStudyBlock title="Process">
-				<p><strong>Research and data analysis</strong></p>
+				<h4>Research and data analysis</h4>
 				<p>
 					I combined a variety of research methods to collect a mix of quantitative and qualitative data, and
 					segmented my participants into the three types of users who used our slide decks and other instructional
@@ -191,7 +202,7 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 				<div class="case-study-block__image">
 					<img src="/images/finding-the-why-behind-slides/project-1-process.svg" alt="" />
 				</div>
-				<p><strong>Bias mitigation</strong></p>
+				<h4>Bias mitigation</h4>
 				<p>
 					An inherent limitation of this study was the potential for bias to creep in from the sole human
 					interpreting all this data (me). I was also not able to include participants to represent every single
@@ -210,7 +221,7 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 			</CaseStudyBlock>
 
 			<CaseStudyBlock title="Key insights">
-				<p><strong>What we learned</strong></p>
+				<h4>What we learned</h4>
 				<p>The findings confirmed my team's first assumption was correct: slide decks were, indeed, important.</p>
 				<p>
 					However, the findings also told us we were wrong about our other assumptions: we didn't know how
@@ -220,12 +231,12 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 					"The data was incredibly useful to me, because it disproved some of my feelings about what was most
 					important to focus on." – Product team member
 				</p>
-				<p><strong>Main findings:</strong></p>
+				<h4>Main findings:</h4>
 				<ul>
-					<li>Many participants want more information on slides</li>
-					<li>Many participants want less information on slides</li>
-					<li>Many students use slide decks for study and review after class</li>
-					<li>Many instructors rely primarily on slide decks to prepare for lectures and workshops</li>
+					<li>Many participants want <strong>more</strong> information on slides</li>
+					<li>Many participants want <strong>less</strong> information on slides</li>
+					<li>Many <strong>students</strong> use slide decks for <strong>study and review</strong> after class</li>
+					<li>Many <strong>instructors</strong> rely primarily on slide decks to <strong>prepare for lectures and workshops</strong></li>
 				</ul>
 				<p>
 					Some findings seemed contradictory, and at first glance, indicated problems that seemed impossible to
@@ -236,7 +247,7 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 					decks for different purposes. Different purposes = different needs. And different needs require different
 					solutions.
 				</p>
-				<p><strong>The takeaway</strong></p>
+				<h4>The takeaway</h4>
 				<p>So far, the slide decks were doing it all (and apparently, doing too much).</p>
 				<p>They served as:</p>
 				<ul>
@@ -262,7 +273,7 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 				<div class="case-study-block__image">
 					<img src="/images/finding-the-why-behind-slides/project-1-solutions.svg" alt="" />
 				</div>
-				<p><strong>What we decided:</strong></p>
+				<h4>What we decided:</h4>
 				<ul>
 					<li>To separate concerns across different curriculum materials
 						<ul>
@@ -282,7 +293,7 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 					videos as learning material for preparing instructors and studying students. I also created a template
 					and style guide for our slide decks, tailored for each program.
 				</p>
-				<p><strong>Constraints</strong></p>
+				<h4>Constraints</h4>
 				<p>
 					This was a fast-paced, start-up environment, and I was the sole designer in the organization. As a
 					result, I quickly had to pivot away from this project to another one before I had a chance to carry out
@@ -293,12 +304,12 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 			</CaseStudyBlock>
 
 			<CaseStudyBlock title="Impact">
-				<p><strong>What did we gain from all this?</strong></p>
+				<h4>What did we gain from all this?</h4>
 				<p>
 					I was able to observe several positive changes myself, and through direct feedback from my team, my
 					manager, and coworkers outside my team.
 				</p>
-				<p><strong>For the Product team:</strong></p>
+				<h4>For the Product team:</h4>
 				<p>
 					We gained time, and a better strategy to allocate that time. We no longer wasted time working on slide
 					decks without first considering what type of information was best suited for each format. If we had not
@@ -309,12 +320,12 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 					"If we had jumped straight into the work as an 'experiment', we would have committed way more time and
 					effort before arriving at the same conclusion that the research did." – Product team member
 				</p>
-				<p><strong>For students and instructors:</strong></p>
+				<h4>For students and instructors:</h4>
 				<p>
 					Material was provided for them in different formats to prepare or learn from, creating a more tailored
 					and optimal learning experience.
 				</p>
-				<p><strong>For the company:</strong></p>
+				<h4>For the company:</h4>
 				<p>
 					These improvements were made for materials used in both our B2C programs, and our enterprise B2B clients.
 					Wide-scale adoption meant wide-scale impact.
@@ -405,24 +416,61 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 		line-height: 1.5;
 	}
 
+	.hero__action-impact {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-large);
+	}
+
+	.hero__group {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-tiny);
+	}
+
+	.hero__body p.hero__label {
+		font-family: var(--font-display);
+		font-size: var(--text-h2);
+		font-weight: 500;
+		color: var(--color-dark-gray);
+	}
+
 	.hero__skills,
 	.hero__note {
 		font-size: var(--text-micro);
 		color: var(--color-light-grey);
 	}
 
+	.hero__note {
+		margin: 0;
+		border: 1px solid var(--color-light-grey);
+		border-radius: 5px;
+		padding: var(--space-padding-medium);
+	}
+
 	.summary {
+		background-color: var(--color-grayish-cream);
+	}
+
+	:global([data-theme='dark']) .summary {
+		background-color: var(--color-purplish-gray);
+	}
+
+	.summary__inner {
 		display: flex;
 		flex-direction: column;
 		gap: var(--space-padding-medium);
+		max-width: var(--content-max-width);
+		margin: 0 auto;
 		padding: var(--space-padding-large);
 	}
 
-	.summary h2 {
+	.summary h3 {
 		margin: 0;
 		font-family: var(--font-display);
 		font-size: var(--text-h2);
 		font-weight: 500;
+		color: var(--color-dark-gray);
 	}
 
 	.summary p {

@@ -6,8 +6,11 @@
   --color-light-grey: #7c7084;
   --color-light-purple: #f5e5ff;
   --color-medium-purple: #c894e9;
+  --color-dark-purple: #463150;
   --color-medium-green: #53c49c;
   --color-light-green: #d5eed8;
+  --color-grayish-cream: #ebeae8;
+  --color-purplish-gray: #251f2a;
 
   /* Typography */
   --font-display: 'Comfortaa', cursive;
@@ -29,6 +32,8 @@
   --space-large: 20px;
   --space-padding-medium: 20px;
   --space-padding-large: 30px;
+
+  --content-max-width: 480px;
 
   --stroke-thin: 0.7px;
   --stroke-medium: 1px;
@@ -86,8 +91,20 @@ p {
 .content {
   flex: 1 0 auto;
   width: 100%;
-  max-width: 480px;
+  max-width: var(--content-max-width);
   margin: 0 auto;
+}
+
+/* Lets a section's background span the full viewport width even though it
+   sits inside .content's centered, max-width column — the element breaks
+   out to the true viewport width, and its own content should be wrapped in
+   a child using max-width: var(--content-max-width); margin: 0 auto to
+   re-center it. Uses --viewport-width (set in BaseLayout.astro) rather than
+   100vw directly: 100vw includes the scrollbar's width, which drifts this
+   a few pixels off-center whenever a vertical scrollbar is present. */
+.full-bleed {
+  width: var(--viewport-width, 100vw);
+  margin-left: calc(50% - var(--viewport-width, 100vw) / 2);
 }
 
 /* Type/spacing tokens stay pixel-exact to the mobile Figma frames below
@@ -112,10 +129,8 @@ p {
     --space-large: 24px;
     --space-padding-medium: 24px;
     --space-padding-large: 38px;
-  }
 
-  .content {
-    max-width: 560px;
+    --content-max-width: 560px;
   }
 }
 
@@ -135,9 +150,7 @@ p {
     --space-large: 28px;
     --space-padding-medium: 28px;
     --space-padding-large: 46px;
-  }
 
-  .content {
-    max-width: 640px;
+    --content-max-width: 640px;
   }
 }

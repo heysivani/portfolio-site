@@ -8,7 +8,7 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 
 <BaseLayout
 	title="CTA: Getting more people to hit apply | sivani.me"
-	description="Discovered critical issues that prevented prospective students from applying to our programs. Updates resulted in an increase in apply button clicks and submissions of the application form, and reduced confusion from prospective students about basic program details like cost and the admissions process."
+	description="Resolved critical issues that prevented prospective students from applying to our programs. More apply button clicks and submissions of the application form, and less confusion from prospective students about basic program details."
 >
 	<SiteHeader />
 	<div class="content">
@@ -36,28 +36,44 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 						<img src="/images/cta-getting-more-people-to-hit-apply/project-3-title.svg" alt="" />
 					</div>
 					<hr />
-					<p>
-						Discovered critical issues that prevented prospective students from applying to our programs. Updates
-						resulted in an increase in apply button clicks and submissions of the application form, and reduced
-						confusion from prospective students about basic program details like cost and the admissions process.
-					</p>
+					<div class="hero__action-impact">
+						<div class="hero__group">
+							<p class="hero__label">Action</p>
+							<p>Resolved critical issues that prevented prospective students from applying to our programs.</p>
+						</div>
+						<div class="hero__group">
+							<p class="hero__label">Impact</p>
+							<p>
+								More apply button clicks and submissions of the application form, and less confusion from
+								prospective students about basic program details.
+							</p>
+						</div>
+					</div>
 					<hr />
 					<p class="hero__skills">
-						Skills: heuristic evaluation, competitive analysis, workshop facilitation, stakeholder interviews,
-						survey design, usability testing, data synthesis, ux design, ui design, brand implementation, design
-						systems, project management
+						<strong>Skills:</strong> heuristic evaluation, competitive analysis, workshop facilitation, stakeholder
+						interviews, survey design, usability testing, data synthesis, ux design, ui design, brand implementation,
+						design systems, project management
 					</p>
 					<p class="hero__note">
-						Note: Some content on this page has been generalized, recreated, or omitted to comply with
+						<strong>Note:</strong> Some content on this page has been generalized, recreated, or omitted to comply with
 						confidentiality agreements.
 					</p>
 				</div>
 			</section>
 
-			<SectionHeading text="Summary" />
+			<SectionHeading text="Summary" topPadded tinted />
 
-			<section class="summary">
-				<h2>Context</h2>
+			<section class="full-bleed summary">
+				<div class="summary__inner">
+					<h3>Impact</h3>
+				<p>
+					We observed an increase in apply button clicks and submissions of the application form. The Admissions
+					team also reported less confusion from prospective students about basic program details like cost, the
+					admissions timeline, and how to apply.
+				</p>
+
+				<h3>Context</h3>
 				<p>
 					My company's main product: B2B and B2C technical training programs for upskilling or career-switching
 					adults to learn software engineering, product design, and product management.
@@ -78,14 +94,14 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 					<li>Increase the number of students applying for each cohort of our software engineering training programs</li>
 				</ol>
 
-				<h2>Process</h2>
+				<h3>Process</h3>
 				<p>
 					I combined a variety of research methods to collect a mix of quantitative and qualitative data. After
 					this, I made updates to the site's content and design, and collected feedback from stakeholders in an
 					iterative process.
 				</p>
 
-				<h2>Key insights</h2>
+				<h3>Key insights</h3>
 				<p>
 					The research uncovered 95 unique issues. Roughly 28% of these issues were classified as
 					"mission-critical" i.e. issues that could make-or-break whether a visitor ever made it to our program
@@ -98,30 +114,24 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 					the program, when this is not what the number signified (and the actual tuition was much lower)
 				</p>
 
-				<h2>Solutions</h2>
+				<h3>Solutions</h3>
 				<p>I redesigned the CTAs and made the admissions process clearer, and reduced the number of clicks it took to apply.</p>
 				<p>
 					I made information about costs more transparent by adding tax-inclusion labels to prices. I moved the
 					average expected salary section and updated its design to make it clearer what the figure represented.
 				</p>
-
-				<h2>Impact</h2>
-				<p>
-					We observed an increase in apply button clicks and submissions of the application form. The Admissions
-					team also reported less confusion from prospective students about basic program details like cost, the
-					admissions timeline, and how to apply.
-				</p>
+				</div>
 			</section>
 
-			<SectionHeading text="Deep dive" />
+			<SectionHeading text="Deep dive" topPadded />
 
 			<CaseStudyBlock title="Context">
-				<p><strong>The company</strong></p>
+				<h4>The company</h4>
 				<p>
 					My company's main product: B2B and B2C technical training programs for upskilling or career-switching
 					adults to learn software engineering, product design, and product management.
 				</p>
-				<p><strong>My role</strong></p>
+				<h4>My role</h4>
 				<p>Job title: Product Designer | Teams involved: Product, B2C</p>
 				<p>
 					The company's public website had previously been managed by the marketing teams, and updated by a
@@ -134,7 +144,7 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 					in Figma, and developed the solutions myself in Webflow, the low-code site builder that hosted our site.
 				</p>
 				<p>I managed this project as a cross-team collaboration between the Product and B2C teams.</p>
-				<p><strong>The challenge</strong></p>
+				<h4>The challenge</h4>
 				<p>The B2C team approached me with the following goals:</p>
 				<ol>
 					<li>
@@ -165,7 +175,7 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 				<div class="case-study-block__image">
 					<img src="/images/cta-getting-more-people-to-hit-apply/project-3-process.svg" alt="" />
 				</div>
-				<p><strong>Research and data analysis</strong></p>
+				<h4>Research and data analysis</h4>
 				<ul>
 					<li>Competitive analysis workshop</li>
 					<li>Stakeholder interviews</li>
@@ -178,7 +188,7 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 					findings and solutions can be found in my other project: <a href="/projects/increasing-b2b-traffic-the-power-of-navigation">Increasing B2B traffic: The power of navigation</a>. This
 					case study will focus on the relevant B2C findings.
 				</p>
-				<p><strong>Workflow</strong></p>
+				<h4>Workflow</h4>
 				<ul>
 					<li>Conducted research, evaluated data, and distilled insights</li>
 					<li>Made updates and collected feedback from stakeholders in an iterative process</li>
@@ -222,7 +232,7 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 				<div class="case-study-block__image">
 					<img src="/images/cta-getting-more-people-to-hit-apply/project-3-solutions.svg" alt="" />
 				</div>
-				<p>I redesigned the CTAs and made the application process clearer:</p>
+				<p><strong>I redesigned the CTAs and made the application process clearer:</strong></p>
 				<ul>
 					<li>
 						Added an apply button to the navigation bar, where it was always visible and took a single click to
@@ -236,7 +246,7 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 					</li>
 					<li>Added an admissions timeline explanation and diagram to the apply page.</li>
 				</ul>
-				<p>I made information about costs more transparent:</p>
+				<p><strong>I made information about costs more transparent:</strong></p>
 				<ul>
 					<li>Added tax-inclusion labels to prices, so the final cost of each program was clear</li>
 					<li>
@@ -334,24 +344,61 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 		line-height: 1.5;
 	}
 
+	.hero__action-impact {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-large);
+	}
+
+	.hero__group {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-tiny);
+	}
+
+	.hero__body p.hero__label {
+		font-family: var(--font-display);
+		font-size: var(--text-h2);
+		font-weight: 500;
+		color: var(--color-dark-gray);
+	}
+
 	.hero__skills,
 	.hero__note {
 		font-size: var(--text-micro);
 		color: var(--color-light-grey);
 	}
 
+	.hero__note {
+		margin: 0;
+		border: 1px solid var(--color-light-grey);
+		border-radius: 5px;
+		padding: var(--space-padding-medium);
+	}
+
 	.summary {
+		background-color: var(--color-grayish-cream);
+	}
+
+	:global([data-theme='dark']) .summary {
+		background-color: var(--color-purplish-gray);
+	}
+
+	.summary__inner {
 		display: flex;
 		flex-direction: column;
 		gap: var(--space-padding-medium);
+		max-width: var(--content-max-width);
+		margin: 0 auto;
 		padding: var(--space-padding-large);
 	}
 
-	.summary h2 {
+	.summary h3 {
 		margin: 0;
 		font-family: var(--font-display);
 		font-size: var(--text-h2);
 		font-weight: 500;
+		color: var(--color-dark-gray);
 	}
 
 	.summary p {

@@ -1,31 +1,35 @@
 ---
 interface Props {
 	text: string;
+	topPadded?: boolean;
+	tinted?: boolean;
 }
 
-const { text } = Astro.props;
+const { text, topPadded = false, tinted = false } = Astro.props;
 const triangles = [0, 1, 2];
 ---
 
-<div class="section-heading">
-	<div class="marker-group marker-group--left">
-		{
-			triangles.map(() => (
-				<svg class="marker" viewBox="0 0 11.681 13.0863" width="12" height="13" xmlns="http://www.w3.org/2000/svg">
-					<path d="M4.67995 12.3252C5.11947 13.3398 6.55822 13.34 6.99798 12.3255L11.5754 1.76554C11.937 0.93144 11.3256 0 10.4165 0H5.84076H1.26454C0.355578 0 -0.25585 0.931198 0.105459 1.76526L4.67995 12.3252Z" />
-				</svg>
-			))
-		}
-	</div>
-	<h2>{text}</h2>
-	<div class="marker-group marker-group--right">
-		{
-			triangles.map(() => (
-				<svg class="marker" viewBox="0 0 11.681 13.0863" width="12" height="13" xmlns="http://www.w3.org/2000/svg">
-					<path d="M4.67995 12.3252C5.11947 13.3398 6.55822 13.34 6.99798 12.3255L11.5754 1.76554C11.937 0.93144 11.3256 0 10.4165 0H5.84076H1.26454C0.355578 0 -0.25585 0.931198 0.105459 1.76526L4.67995 12.3252Z" />
-				</svg>
-			))
-		}
+<div class:list={['section-heading', { 'full-bleed section-heading--tinted': tinted }]}>
+	<div class:list={['section-heading__inner', { 'section-heading__inner--top-padded': topPadded }]}>
+		<div class="marker-group marker-group--left">
+			{
+				triangles.map(() => (
+					<svg class="marker" viewBox="0 0 11.681 13.0863" width="12" height="13" xmlns="http://www.w3.org/2000/svg">
+						<path d="M4.67995 12.3252C5.11947 13.3398 6.55822 13.34 6.99798 12.3255L11.5754 1.76554C11.937 0.93144 11.3256 0 10.4165 0H5.84076H1.26454C0.355578 0 -0.25585 0.931198 0.105459 1.76526L4.67995 12.3252Z" />
+					</svg>
+				))
+			}
+		</div>
+		<h2>{text}</h2>
+		<div class="marker-group marker-group--right">
+			{
+				triangles.map(() => (
+					<svg class="marker" viewBox="0 0 11.681 13.0863" width="12" height="13" xmlns="http://www.w3.org/2000/svg">
+						<path d="M4.67995 12.3252C5.11947 13.3398 6.55822 13.34 6.99798 12.3255L11.5754 1.76554C11.937 0.93144 11.3256 0 10.4165 0H5.84076H1.26454C0.355578 0 -0.25585 0.931198 0.105459 1.76526L4.67995 12.3252Z" />
+					</svg>
+				))
+			}
+		</div>
 	</div>
 </div>
 
@@ -34,8 +38,10 @@ const triangles = [0, 1, 2];
 	const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 	if (headings.length > 0 && !reduceMotion) {
-		// light-green -> medium-green, matching --color-light-green / --color-medium-green
-		const fromColor = [213, 238, 216];
+		// light-green -> medium-green in light mode, light-purple -> medium-green in dark
+		// mode, matching --color-light-green/--color-light-purple / --color-medium-green
+		const fromColorLight = [213, 238, 216];
+		const fromColorDark = [88, 78, 94];
 		const toColor = [83, 196, 156];
 
 		const trackers = Array.from(headings).map((heading) => {
@@ -62,6 +68,7 @@ const triangles = [0, 1, 2];
 				const progress = window.scrollY <= 0 ? 0 : Math.max(0, Math.min(1, (triggerLine - rect.top) / rampDistance));
 				heading.style.setProperty('--arrow-progress', progress.toFixed(3));
 
+				const fromColor = document.documentElement.dataset.theme === 'dark' ? fromColorDark : fromColorLight;
 				const [r, g, b] = fromColor.map((from, i) => Math.round(from + (toColor[i] - from) * progress));
 				heading.style.setProperty('--arrow-color', `rgb(${r}, ${g}, ${b})`);
 			};
@@ -91,6 +98,13 @@ const triangles = [0, 1, 2];
 		onResize();
 		window.addEventListener('scroll', onScroll, { passive: true });
 		window.addEventListener('resize', onResize);
+
+		// Re-run so a theme toggle mid-session (no scroll involved) still picks
+		// up the light/dark from-color immediately.
+		new MutationObserver(() => trackers.forEach((t) => t.updateProgress())).observe(document.documentElement, {
+			attributes: true,
+			attributeFilter: ['data-theme'],
+		});
 	}
 </script>
 
@@ -98,11 +112,36 @@ const triangles = [0, 1, 2];
 	.section-heading {
 		--arrow-progress: 0;
 		--arrow-color: var(--color-light-green);
+	}
+
+	:global([data-theme='dark']) .section-heading {
+		--arrow-color: var(--color-light-purple);
+	}
+
+	/* Only tinted headings need to break out of .content's centered column
+	   (via the global .full-bleed class) — an untinted heading has no
+	   visible background, so there's nothing to bleed and it stays laid out
+	   exactly as it was before. */
+	.section-heading--tinted {
+		background-color: var(--color-grayish-cream);
+	}
+
+	:global([data-theme='dark']) .section-heading--tinted {
+		background-color: var(--color-purplish-gray);
+	}
+
+	.section-heading__inner {
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		gap: var(--space-large);
+		max-width: var(--content-max-width);
+		margin: 0 auto;
 		padding: var(--space-padding-medium) var(--space-padding-large);
+	}
+
+	.section-heading__inner--top-padded {
+		padding-top: var(--space-padding-large);
 	}
 
 	h2 {
