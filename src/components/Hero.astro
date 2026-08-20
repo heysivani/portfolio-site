@@ -8,7 +8,7 @@ import ProfileCard from './ProfileCard.astro';
 			<h1>
 				<span class="hero-line1"
 					>Hi! I'm
-					<span class="name-block">
+					<span class="name-wrap">
 						<span class="name-anchor">Sivani<span class="romaji">シバーニ</span></span
 						><span class="pronunciation">/shi-vah-nee/</span>
 					</span></span
@@ -171,25 +171,33 @@ import ProfileCard from './ProfileCard.astro';
 			white-space: nowrap;
 		}
 
-		/* Stacks the name above its pronunciation instead of running them on
-		   the same line — .romaji stays absolutely positioned against
-		   .name-anchor either way, so it doesn't need to move. */
-		.name-block {
-			display: inline-flex;
-			flex-direction: column;
-			align-items: center;
-			gap: 0.1em;
+		/* .name-wrap only matters here at desktop: it gives .pronunciation a
+		   containing block that's the same width as .name-anchor (pronunciation
+		   is position:absolute below, so it doesn't contribute to name-wrap's
+		   own shrink-to-fit width), so .romaji and .pronunciation end up
+		   centered and equidistant from "Sivani" via the same mechanism — same
+		   em offset, same font-size — instead of one being a hair off from the
+		   other. Deliberately NOT nesting .pronunciation inside .name-anchor
+		   itself: at mobile .pronunciation is normal-flow (not absolute), so
+		   living inside .name-anchor would widen it and throw off .romaji's
+		   centering, which is relative to .name-anchor alone. */
+		.name-wrap {
+			position: relative;
+			display: inline-block;
 		}
 
 		.romaji {
-			top: -1.3em;
+			top: -0.9em;
 			font-size: 0.32em;
 		}
 
 		.pronunciation {
 			display: block;
-			position: static;
+			position: absolute;
+			left: 50%;
+			bottom: -0.9em;
 			top: auto;
+			transform: translateX(-50%);
 			margin-left: 0;
 			font-size: 0.32em;
 		}
