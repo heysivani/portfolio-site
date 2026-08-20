@@ -138,6 +138,15 @@ const abilities = ['Design', 'Writing', 'Coding'];
 		// isn't set directly — aspect-ratio (see stylesheet) derives it from
 		// this height, so the photo scales up uniformly instead of re-cropping.
 		const syncPhotoHeight = () => {
+			// .photo's width (derived from its height via aspect-ratio) and
+			// .stats share the same row, so a stale inline height can narrow
+			// .stats enough to make its content wrap taller — and that taller
+			// reading would just get copied back onto .photo, locking in the
+			// same oversized width. Clearing the inline height first measures
+			// .stats against .photo's CSS default for the current breakpoint
+			// every time, instead of against whatever (possibly wrong) height
+			// was set last, so a resize can shrink back down, not just grow.
+			photo.style.height = '';
 			photo.style.height = `${stats.getBoundingClientRect().height}px`;
 		};
 
@@ -409,6 +418,12 @@ const abilities = ['Design', 'Writing', 'Coding'];
 	.stats {
 		flex: 1;
 		min-width: 0;
+		/* Must stay off the row's default stretch: the height-sync script below
+		   reads this element's rendered height to size .photo, and if this
+		   stretched to match .photo in turn, that height would keep echoing
+		   itself back on every resize instead of tracking .stats' real content
+		   height — the sync could grow but never shrink. */
+		align-self: flex-start;
 		display: flex;
 		flex-direction: column;
 		gap: var(--space-medium);

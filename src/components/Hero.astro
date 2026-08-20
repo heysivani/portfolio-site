@@ -13,6 +13,12 @@ import ProfileCard from './ProfileCard.astro';
 		</h1>
 	</div>
 
+	<div class="hero__decoration" aria-hidden="true">
+		<svg class="hero__triangle" viewBox="0 0 11.681 13.0863" xmlns="http://www.w3.org/2000/svg">
+			<path d="M4.67995 12.3252C5.11947 13.3398 6.55822 13.34 6.99798 12.3255L11.5754 1.76554C11.937 0.93144 11.3256 0 10.4165 0H5.84076H1.26454C0.355578 0 -0.25585 0.931198 0.105459 1.76526L4.67995 12.3252Z" />
+		</svg>
+	</div>
+
 	<ProfileCard />
 </section>
 
@@ -60,5 +66,57 @@ import ProfileCard from './ProfileCard.astro';
 		font-weight: 400;
 		color: var(--color-light-grey);
 		white-space: nowrap;
+	}
+
+	/* Decorative — the same triangle glyph as .ability-marker in ProfileCard,
+	   just scaled way up and held static (no scroll-linked color animation).
+	   Hidden below the desktop restructure; there's no mobile/tablet
+	   equivalent in the design. */
+	.hero__decoration {
+		display: none;
+	}
+
+	.hero__triangle {
+		width: 130px;
+		height: 145px;
+		fill: var(--color-medium-green);
+		transform: rotate(-90deg);
+	}
+
+	/* Desktop-only restructure (per Figma node 4294:1219): the hero becomes a
+	   two-column row — headline and decorative triangle on the left (triangle
+	   centered in the space the headline doesn't fill), profile card on the
+	   right at its own comfortable width instead of stretching full-width.
+	   Starts at 1280px rather than the usual 1024px desktop tier: at 1024px,
+	   --content-max-width is still only 640px, which isn't enough room to
+	   split into two columns without squeezing the headline down to a sliver.
+	   Below 1280px is untouched — same .hero flex column as always,
+	   decoration just stays hidden. */
+	@media (min-width: 1280px) {
+		.hero {
+			display: grid;
+			grid-template-columns: minmax(220px, 1fr) minmax(300px, 420px);
+			grid-template-rows: auto 1fr;
+			grid-template-areas:
+				'headline card'
+				'decoration card';
+			align-items: stretch;
+			gap: var(--space-large);
+		}
+
+		.headline {
+			grid-area: headline;
+		}
+
+		.hero__decoration {
+			grid-area: decoration;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		.hero :global(.profile-card) {
+			grid-area: card;
+		}
 	}
 </style>
