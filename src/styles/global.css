@@ -154,3 +154,28 @@ p {
     --content-max-width: 640px;
   }
 }
+
+/* Beyond the tablet/desktop tiers above, only --content-max-width keeps
+   growing — type and spacing tokens stay put, since 1024px's scale is
+   already the intended ceiling for those. Without this, .content's width
+   would stay capped at 640px forever, leaving increasingly large side
+   margins on wide monitors; growing it here (a bit faster than viewport
+   width, so its side margins shrink as a percentage, not just stay flat)
+   lets content fill more of the available width the wider the screen gets. */
+@media (min-width: 1280px) {
+  :root {
+    --content-max-width: 860px;
+  }
+}
+
+@media (min-width: 1440px) {
+  :root {
+    --content-max-width: 1040px;
+  }
+}
+
+@media (min-width: 1920px) {
+  :root {
+    --content-max-width: 1400px;
+  }
+}
