@@ -26,41 +26,6 @@ const { href, image, title, description, skills } = Astro.props;
 	<div class="project-card__cta">View project &rarr;</div>
 </a>
 
-<script>
-	const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-	if (!reduceMotion) {
-		const cards = document.querySelectorAll('.project-card');
-
-		cards.forEach((card) => {
-			// Unlike the other squash-and-stretch triggers on this site, this
-			// one is deliberately tied to hover state: it settles larger while
-			// hovering (so it's clear the card is "active"), then squishes
-			// back down on pointer-leave — rather than always playing the same
-			// animation back to its own starting size regardless of hover.
-			card.addEventListener('pointerenter', () => {
-				card.classList.remove('is-leaving');
-				card.classList.remove('is-hovering');
-				void card.getBoundingClientRect();
-				card.classList.add('is-hovering');
-			});
-
-			card.addEventListener('pointerleave', () => {
-				card.classList.remove('is-hovering');
-				card.classList.remove('is-leaving');
-				void card.getBoundingClientRect();
-				card.classList.add('is-leaving');
-			});
-
-			card.addEventListener('animationend', (event) => {
-				if (event.animationName === 'card-bubble-out') {
-					card.classList.remove('is-leaving');
-				}
-			});
-		});
-	}
-</script>
-
 <style>
 	.project-card {
 		display: block;
@@ -70,54 +35,17 @@ const { href, image, title, description, skills } = Astro.props;
 		box-shadow: 0 8px 16px rgba(124, 112, 132, 0.12);
 		text-decoration: none;
 		color: inherit;
+		transition: transform 0.2s ease-out;
 	}
 
-	.project-card.is-hovering {
-		animation: card-bubble-in 0.42s ease-out forwards;
-	}
-
-	.project-card.is-leaving {
-		animation: card-bubble-out 0.34s ease-out forwards;
-	}
-
-	/* Gentle "bubble" pop: a soft, uniform scale-up that overshoots its
-	   resting size slightly before settling, rather than the old squash-and-
-	   stretch's uneven x/y distortion — reads as bouncier and more
-	   cartoon-y/game-y, less like the card is being physically squeezed. */
-	@keyframes card-bubble-in {
-		0% {
-			transform: scale(1);
-		}
-		55% {
-			transform: scale(1.075);
-		}
-		80% {
-			transform: scale(1.03);
-		}
-		100% {
-			transform: scale(1.05);
-		}
-	}
-
-	@keyframes card-bubble-out {
-		0% {
-			transform: scale(1.05);
-		}
-		45% {
-			transform: scale(0.975);
-		}
-		75% {
-			transform: scale(1.015);
-		}
-		100% {
-			transform: scale(1);
-		}
+	.project-card:hover,
+	.project-card:focus-visible {
+		transform: scale(1.05);
 	}
 
 	@media (prefers-reduced-motion: reduce) {
-		.project-card.is-hovering,
-		.project-card.is-leaving {
-			animation: none;
+		.project-card {
+			transition: none;
 		}
 	}
 
