@@ -6,10 +6,15 @@ interface Props {
 
 const { animate = false, startDelay = 0 } = Astro.props;
 
+/* width/height match each icon's own Figma box (node 4294:1281) rather
+   than a shared square size — mail's native art is 25x26, linkedin/github's
+   is 20x19, and forcing all three into the same square was stretching
+   linkedin/github about 20% taller than intended, which is what threw off
+   their height relative to mail. */
 const links = [
-	{ href: 'mailto:chatwithsivani@gmail.com', label: 'Email', icon: '/icons/mail.svg', size: 25 },
-	{ href: 'https://www.linkedin.com/in/heysivani/', label: 'LinkedIn', icon: '/icons/linkedin.svg', size: 20 },
-	{ href: 'https://github.com/heysivani', label: 'GitHub', icon: '/icons/github.svg', size: 20 },
+	{ href: 'mailto:chatwithsivani@gmail.com', label: 'Email', icon: '/icons/mail.svg', width: 25, height: 26 },
+	{ href: 'https://www.linkedin.com/in/heysivani/', label: 'LinkedIn', icon: '/icons/linkedin.svg', width: 20, height: 19 },
+	{ href: 'https://github.com/heysivani', label: 'GitHub', icon: '/icons/github.svg', width: 20, height: 19 },
 ];
 ---
 
@@ -18,7 +23,14 @@ const links = [
 		links.map((link, i) => (
 			<li style={animate ? { animationDelay: `${(startDelay + i * 0.08).toFixed(2)}s` } : undefined}>
 				<a class="social-links__link" href={link.href} aria-label={link.label} target={link.href.startsWith('http') ? '_blank' : undefined} rel={link.href.startsWith('http') ? 'noreferrer' : undefined}>
-					<img src={link.icon} alt="" width={link.size} height={link.size} />
+					{link.label === 'Email' ? (
+						<svg width={link.width} height={link.height} viewBox="0 0 25 26" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+							<path d="M20.7031 4.87529H4.29687C3.21818 4.87529 2.34374 5.78472 2.34374 6.90654V19.094C2.34374 20.2159 3.21818 21.1253 4.29687 21.1253H20.7031C21.7818 21.1253 22.6562 20.2159 22.6562 19.094V6.90654C22.6562 5.78472 21.7818 4.87529 20.7031 4.87529Z" fill="#C894E9" />
+							<path class="mail-icon__line" d="M6.49991 9.36331L12.4999 13.3633L18.4999 9.36331" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+						</svg>
+					) : (
+						<img src={link.icon} alt="" width={link.width} height={link.height} />
+					)}
 				</a>
 			</li>
 		))
@@ -62,6 +74,10 @@ const links = [
 	.social-links a {
 		display: block;
 		line-height: 0;
+	}
+
+	.mail-icon__line {
+		stroke: var(--color-cream);
 	}
 
 	.social-links--animated li {

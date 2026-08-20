@@ -35,22 +35,24 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 					<div class="hero__image">
 						<img src="/images/finding-the-why-behind-slides/project-1-title.svg" alt="" />
 					</div>
-					<hr />
-					<div class="hero__action-impact">
-						<div class="hero__group">
-							<p class="hero__label">Action</p>
-							<p>UX research to evaluate instructional materials.</p>
+					<div class="hero__details">
+						<hr />
+						<div class="hero__action-impact">
+							<div class="hero__group">
+								<p class="hero__label">Action</p>
+								<p>UX research to evaluate instructional materials.</p>
+							</div>
+							<div class="hero__group">
+								<p class="hero__label">Impact</p>
+								<p>
+									Higher quality curriculum materials used across our B2B enterprise and B2C programs, more efficient
+									time allocation for curriculum creators, and a higher level of design maturity within our
+									organization.
+								</p>
+							</div>
 						</div>
-						<div class="hero__group">
-							<p class="hero__label">Impact</p>
-							<p>
-								Higher quality curriculum materials used across our B2B enterprise and B2C programs, more efficient
-								time allocation for curriculum creators, and a higher level of design maturity within our
-								organization.
-							</p>
-						</div>
+						<hr />
 					</div>
-					<hr />
 					<p class="hero__skills">
 						<strong>Skills:</strong> user interviews, stakeholder interviews, usability tests, survey design, heuristic
 						evaluations, competitive analysis, thematic analysis, quantitative and qualitative data analysis, data
@@ -416,6 +418,17 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 		line-height: 1.5;
 	}
 
+	.hero__details {
+		display: flex;
+		flex-direction: column;
+		/* Matches .hero__body's own gap (both var(--space-padding-large)) —
+		   .hero__details' children used to be direct children of .hero__body
+		   and inherited its spacing that way; wrapping them for the desktop
+		   layout below needs this restated explicitly so mobile's spacing
+		   stays exactly what it was. */
+		gap: var(--space-padding-large);
+	}
+
 	.hero__action-impact {
 		display: flex;
 		flex-direction: column;
@@ -446,6 +459,55 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 		border: 1px solid var(--color-light-grey);
 		border-radius: 5px;
 		padding: var(--space-padding-medium);
+	}
+
+	/* Desktop-only restructure, matching the homepage project cards'
+	   layout: image on the left, Action/Impact on the right, skills below
+	   both, spanning full width. The Note box keeps its existing flow —
+	   full width, right after skills — untouched. No JS/font-scaling
+	   involved (unlike the project cards): .hero__image's width comes from
+	   its fixed grid column, and its height comes from the grid row's
+	   default stretch (aspect-ratio removed so nothing here locks width to
+	   height), so the two are independent and there's no resize-feedback
+	   risk to guard against. Below 1280px (including 600px and 1024px) is
+	   untouched — same flex column, same type scale as always. 1280px
+	   matches Hero/ProjectCard's own breakpoint. */
+	@media (min-width: 1280px) {
+		.hero__body {
+			display: grid;
+			grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+			grid-template-areas:
+				'heading heading'
+				'image details'
+				'skills skills'
+				'note note';
+			gap: var(--space-padding-medium) var(--space-large);
+		}
+
+		.hero__heading {
+			grid-area: heading;
+		}
+
+		.hero__image {
+			grid-area: image;
+			aspect-ratio: unset;
+			height: 100%;
+		}
+
+		.hero__details {
+			grid-area: details;
+			display: flex;
+			flex-direction: column;
+			gap: var(--space-large);
+		}
+
+		.hero__skills {
+			grid-area: skills;
+		}
+
+		.hero__note {
+			grid-area: note;
+		}
 	}
 
 	.summary {

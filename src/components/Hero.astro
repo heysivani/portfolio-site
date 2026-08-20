@@ -3,18 +3,82 @@ import ProfileCard from './ProfileCard.astro';
 ---
 
 <section class="hero">
-	<div class="headline">
-		<h1>
-			Hi! I'm
-			<span class="name-anchor">Sivani<span class="romaji">シバーニ</span></span
-			><span class="pronunciation">/shi-vah-nee/</span>
-			<br /><br />
-			I'm a designer, writer, and developer.
-		</h1>
+	<div class="hero__headline">
+		<div class="headline">
+			<h1>
+				<span class="hero-line1"
+					>Hi! I'm
+					<span class="name-wrap">
+						<span class="name-anchor">Sivani<span class="romaji">シバーニ</span></span
+						><span class="pronunciation">/shi-vah-nee/</span>
+					</span></span
+				>
+				<br /><br />
+				I'm a designer, writer, and developer.
+			</h1>
+		</div>
 	</div>
 
-	<ProfileCard />
+	<div class="hero__card">
+		<ProfileCard />
+	</div>
 </section>
+
+<script>
+	const headline = document.querySelector('.hero__headline');
+	const headlineInner = document.querySelector('.headline');
+	const line1 = document.querySelector('.hero-line1');
+	const h1 = document.querySelector('.headline h1');
+	const romaji = document.querySelector('.romaji');
+	const card = document.querySelector('.hero__card');
+
+	if (
+		headline instanceof HTMLElement &&
+		headlineInner instanceof HTMLElement &&
+		line1 instanceof HTMLElement &&
+		h1 instanceof HTMLElement &&
+		romaji instanceof HTMLElement &&
+		card instanceof HTMLElement
+	) {
+		const REFERENCE_SIZE = 200;
+		const MIN_SIZE = 24;
+		const MAX_SIZE = 72;
+
+		// Keeps "Hi! I'm Sivani" (see .hero-line1's white-space:nowrap below) on
+		// one line at desktop by shrinking the whole heading's font-size to fit,
+		// rather than letting it wrap, then nudges the whole headline block up
+		// or down so the romaji label's top edge lines up with the card's top
+		// edge — without changing anything about the headline's own internal
+		// spacing. Both measurements reset the thing they're about to
+		// recompute first (font-size, then the alignment transform) instead of
+		// building on the previous run's output — sizing/positioning off your
+		// own last result is circular, the same trap the profile-photo height
+		// sync elsewhere on this page had to avoid.
+		const fitHeadline = () => {
+			const isDesktop = window.matchMedia('(min-width: 1280px)').matches;
+
+			if (!isDesktop) {
+				h1.style.fontSize = '';
+				headlineInner.style.transform = '';
+				return;
+			}
+
+			h1.style.fontSize = `${REFERENCE_SIZE}px`;
+			const naturalWidth = line1.getBoundingClientRect().width;
+			const availableWidth = headline.getBoundingClientRect().width;
+			const fitSize = (availableWidth / naturalWidth) * REFERENCE_SIZE;
+
+			h1.style.fontSize = `${Math.min(Math.max(fitSize, MIN_SIZE), MAX_SIZE)}px`;
+
+			headlineInner.style.transform = '';
+			const offset = card.getBoundingClientRect().top - romaji.getBoundingClientRect().top;
+			headlineInner.style.transform = `translateY(${offset}px)`;
+		};
+
+		fitHeadline();
+		new ResizeObserver(fitHeadline).observe(headline);
+	}
+</script>
 
 <style>
 	.hero {
@@ -60,5 +124,82 @@ import ProfileCard from './ProfileCard.astro';
 		font-weight: 400;
 		color: var(--color-light-grey);
 		white-space: nowrap;
+	}
+
+	/* Desktop-only restructure (per Figma node 4294:1308): headline on the
+	   left filling whatever space is available, profile card on the right
+	   at its own comfortable width. Below 1280px is untouched — same .hero
+	   flex column, same fixed type scale, same pronunciation-inline-beside-
+	   the-name layout as always. 1280px (not the usual 1024px desktop tier)
+	   is used for the same reason as the previous hero pass:
+	   --content-max-width is still only 640px at 1024px, not enough room
+	   for two columns. */
+	@media (min-width: 1280px) {
+		.hero {
+			display: grid;
+			/* minmax(0, 1fr), not bare 1fr: a bare 1fr track has an implicit
+			   minmax(auto, 1fr), and "auto" here means the min-content size of
+			   its content — which, thanks to .hero-line1's white-space:nowrap
+			   below, is the full unwrapped width of "Hi! I'm Sivani". That was
+			   forcing this column to expand and squeezing the card down to its
+			   360px floor. The explicit 0 removes that automatic minimum. */
+			grid-template-columns: minmax(0, 1fr) minmax(360px, 420px);
+			grid-template-areas: 'headline card';
+			align-items: start;
+			gap: 100px;
+		}
+
+		.hero__card {
+			grid-area: card;
+		}
+
+		.hero__headline {
+			grid-area: headline;
+		}
+
+		/* "Hi! I'm Sivani" must never wrap — the script above shrinks the
+		   whole h1's font-size instead so it always fits in one line next to
+		   the card. 40px is just the pre-JS/no-JS fallback; the script
+		   overrides it immediately on load. */
+		.headline h1 {
+			font-size: 40px;
+			line-height: 1.3;
+		}
+
+		.hero-line1 {
+			display: inline-block;
+			white-space: nowrap;
+		}
+
+		/* .name-wrap only matters here at desktop: it gives .pronunciation a
+		   containing block that's the same width as .name-anchor (pronunciation
+		   is position:absolute below, so it doesn't contribute to name-wrap's
+		   own shrink-to-fit width), so .romaji and .pronunciation end up
+		   centered and equidistant from "Sivani" via the same mechanism — same
+		   em offset, same font-size — instead of one being a hair off from the
+		   other. Deliberately NOT nesting .pronunciation inside .name-anchor
+		   itself: at mobile .pronunciation is normal-flow (not absolute), so
+		   living inside .name-anchor would widen it and throw off .romaji's
+		   centering, which is relative to .name-anchor alone. */
+		.name-wrap {
+			position: relative;
+			display: inline-block;
+		}
+
+		.romaji {
+			top: -0.9em;
+			font-size: 0.32em;
+		}
+
+		.pronunciation {
+			display: block;
+			position: absolute;
+			left: 50%;
+			bottom: -0.9em;
+			top: auto;
+			transform: translateX(-50%);
+			margin-left: 0;
+			font-size: 0.32em;
+		}
 	}
 </style>

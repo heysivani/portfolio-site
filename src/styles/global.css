@@ -16,22 +16,30 @@
   --font-display: 'Comfortaa', cursive;
   --font-body: 'Manrope', sans-serif;
 
-  --text-h1: 28px;
-  --text-h2: 22px;
-  --text-h3: 18px;
-  --text-body-large: 17px;
-  --text-body: 16px;
-  --text-small: 14px;
-  --text-micro: 12px;
+  /* These are the ~320px-worst-case values, scaled down (~0.853x, same
+     ratio as 320/375) from the mobile Figma frames' pixel-exact values
+     below — see the min-width:375px override right after this block,
+     which restores those pixel-exact values for every width this site
+     was actually designed at. Text sizes use half-pixel steps rather
+     than rounding to whole numbers so scaling doesn't collapse two
+     originally-distinct sizes (e.g. h3 vs body-large) into the same
+     value. */
+  --text-h1: 24px;
+  --text-h2: 19px;
+  --text-h3: 15.5px;
+  --text-body-large: 14.5px;
+  --text-body: 13.5px;
+  --text-small: 12px;
+  --text-micro: 10px;
 
   /* Spacing */
   --space-tiny: 2px;
-  --space-micro: 4px;
-  --space-small: 7px;
-  --space-medium: 10px;
-  --space-large: 20px;
-  --space-padding-medium: 20px;
-  --space-padding-large: 30px;
+  --space-micro: 3px;
+  --space-small: 6px;
+  --space-medium: 9px;
+  --space-large: 17px;
+  --space-padding-medium: 17px;
+  --space-padding-large: 26px;
 
   --content-max-width: 480px;
 
@@ -107,6 +115,31 @@ p {
   margin-left: calc(50% - var(--viewport-width, 100vw) / 2);
 }
 
+/* Restores the mobile Figma frames' pixel-exact values (the site's actual
+   designed floor) from 375px up — the :root defaults above this point are
+   only for the 320-374px range the frames don't cover, scaled down from
+   these same numbers. Everything from here up through the rest of this
+   file is unchanged from before that scaled-down floor existed. */
+@media (min-width: 375px) {
+  :root {
+    --text-h1: 28px;
+    --text-h2: 22px;
+    --text-h3: 18px;
+    --text-body-large: 17px;
+    --text-body: 16px;
+    --text-small: 14px;
+    --text-micro: 12px;
+
+    --space-tiny: 2px;
+    --space-micro: 4px;
+    --space-small: 7px;
+    --space-medium: 10px;
+    --space-large: 20px;
+    --space-padding-medium: 20px;
+    --space-padding-large: 30px;
+  }
+}
+
 /* Type/spacing tokens stay pixel-exact to the mobile Figma frames below
    600px, then step up a tier at tablet and desktop widths so the design
    doesn't feel stuck at mobile scale on larger screens. No frames exist for
@@ -152,5 +185,32 @@ p {
     --space-padding-large: 46px;
 
     --content-max-width: 640px;
+  }
+}
+
+/* Beyond the tablet/desktop tiers above, only --content-max-width keeps
+   growing — type and spacing tokens stay put, since 1024px's scale is
+   already the intended ceiling for those. Without this, .content's width
+   would stay capped at 640px forever, leaving increasingly large side
+   margins on wide monitors; growing it here (a bit faster than viewport
+   width, so its side margins shrink as a percentage, not just stay flat)
+   lets content fill more of the available width the wider the screen gets. */
+@media (min-width: 1280px) {
+  :root {
+    --content-max-width: 860px;
+  }
+}
+
+@media (min-width: 1440px) {
+  :root {
+    /* Ceiling: content stops growing past this point, so it stays 940px
+       all the way up through the 1920px tier below too. */
+    --content-max-width: 940px;
+  }
+}
+
+@media (min-width: 1920px) {
+  :root {
+    --content-max-width: 940px;
   }
 }
