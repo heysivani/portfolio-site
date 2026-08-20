@@ -7,7 +7,7 @@ const { title } = Astro.props;
 ---
 
 <section class="case-study-block">
-	<h2>{title}</h2>
+	<h3>{title}</h3>
 	<div class="case-study-block__body">
 		<slot />
 	</div>
@@ -34,11 +34,12 @@ const { title } = Astro.props;
 		object-fit: cover;
 	}
 
-	.case-study-block h2 {
+	.case-study-block h3 {
 		margin: 0;
 		font-family: var(--font-display);
 		font-size: var(--text-h2);
 		font-weight: 500;
+		color: var(--color-dark-gray);
 	}
 
 	.case-study-block__body {
@@ -53,11 +54,27 @@ const { title } = Astro.props;
 		margin: 0;
 	}
 
+	.case-study-block__body :global(h4) {
+		margin: 0;
+		font-family: var(--font-display);
+		font-size: var(--text-h3);
+		font-weight: 400;
+		color: var(--color-light-grey);
+	}
+
 	.case-study-block__body :global(ul) {
 		margin: 0;
 		padding-left: 1.2em;
 		display: flex;
 		flex-direction: column;
 		gap: var(--space-medium);
+	}
+
+	/* A nested <ul> sits inside its parent <li> as plain block content, so it
+	   has no gap of its own from the label text above it (li isn't a flex
+	   container) — this margin matches that gap to the space the outer ul's
+	   `gap` already gives between sibling bullets. */
+	.case-study-block__body :global(li > ul) {
+		margin-top: var(--space-medium);
 	}
 </style>

@@ -43,12 +43,12 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 					</p>
 					<hr />
 					<p class="hero__skills">
-						Skills: heuristic evaluation, competitive analysis, workshop facilitation, stakeholder interviews,
-						survey design, usability testing, data synthesis, information architecture, ux design, ui design,
-						brand implementation, design systems, project management
+						<strong>Skills:</strong> heuristic evaluation, competitive analysis, workshop facilitation, stakeholder
+						interviews, survey design, usability testing, data synthesis, information architecture, ux design, ui
+						design, brand implementation, design systems, project management
 					</p>
 					<p class="hero__note">
-						Note: Some content on this page has been generalized, recreated, or omitted to comply with
+						<strong>Note:</strong> Some content on this page has been generalized, recreated, or omitted to comply with
 						confidentiality agreements.
 					</p>
 				</div>
@@ -57,7 +57,7 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 			<SectionHeading text="Summary" />
 
 			<section class="summary">
-				<h2>Context</h2>
+				<h3>Context</h3>
 				<p>
 					My company's main product: B2B and B2C technical training programs for upskilling or career-switching
 					adults to learn software engineering, product design, and product management.
@@ -75,21 +75,21 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 					B2B side of the site.
 				</p>
 
-				<h2>Process</h2>
+				<h3>Process</h3>
 				<p>
 					I combined a variety of research methods to collect a mix of quantitative and qualitative data. After
 					this, I made updates to the site's content and design, and collected feedback from stakeholders in an
 					iterative process. I held weekly syncs with the B2B Marketing Manager to communicate about the project.
 				</p>
 
-				<h2>Key insights</h2>
+				<h3>Key insights</h3>
 				<p>
 					The research surfaced a discoverability problem with our B2B site. Given that the navigation issues
 					causing this were observed multiple times in my research, my hypothesis was this: creating a clearer
 					path from the B2C side of the site to the B2B side would result in higher traffic to our B2B pages.
 				</p>
 
-				<h2>Solutions</h2>
+				<h3>Solutions</h3>
 				<p>
 					After the B2C and B2B teams confirmed that localizing content was not a priority, I removed the language
 					toggle entirely and replaced it with navigation bar links to switch between the B2C/English and
@@ -97,7 +97,7 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 					audience's primary language.
 				</p>
 
-				<h2>Impact</h2>
+				<h3>Impact</h3>
 				<p>
 					After these updates, we observed a higher average scroll percentage and a higher average number of
 					clicks on our redesigned B2B pages. The website analytics also confirmed that our navigation update was
@@ -109,13 +109,13 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 			<SectionHeading text="Deep dive" />
 
 			<CaseStudyBlock title="Context">
-				<p><strong>The company</strong></p>
+				<h4>The company</h4>
 				<p>
 					My company's main product: B2B and B2C technical training programs for upskilling or career-switching
 					adults to learn software engineering, product design, and product management. Our primary B2B client was
 					a global enterprise automotive company.
 				</p>
-				<p><strong>My role</strong></p>
+				<h4>My role</h4>
 				<p>Job title: Product Designer | Teams involved: Product, B2B</p>
 				<p>
 					The company's public website had previously been managed by the marketing teams, and updated by a
@@ -134,7 +134,7 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 				<div class="case-study-block__image">
 					<img src="/images/increasing-b2b-traffic-the-power-of-navigation/project-2-context.svg" alt="" />
 				</div>
-				<p><strong>The challenge</strong></p>
+				<h4>The challenge</h4>
 				<p>
 					The company was looking to expand the scope of its B2B offerings and target a wider range of clients. In
 					support of this, the B2B team wanted to better leverage our website to promote our services to
@@ -159,7 +159,7 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 			</CaseStudyBlock>
 
 			<CaseStudyBlock title="Process">
-				<p><strong>Research and data analysis</strong></p>
+				<h4>Research and data analysis</h4>
 				<ul>
 					<li>Competitive analysis workshop</li>
 					<li>Stakeholder interviews</li>
@@ -172,7 +172,7 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 					findings and solutions can be found in my other project: <a href="/projects/cta-getting-more-people-to-hit-apply">CTA: Getting more people to hit apply</a>. This case study
 					will focus on the relevant B2B findings.
 				</p>
-				<p><strong>Workflow</strong></p>
+				<h4>Workflow</h4>
 				<ul>
 					<li>Conducted research, evaluated data, and distilled insights</li>
 					<li>Held weekly syncs with the B2B Marketing Manager</li>
@@ -185,7 +185,7 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 			</CaseStudyBlock>
 
 			<CaseStudyBlock title="Key insights">
-				<p><strong>What we learned</strong></p>
+				<h4>What we learned</h4>
 				<p>
 					The research surfaced a discoverability problem: our B2C site was the default homepage and outranked B2B
 					in search. Our B2C branch of the business had been around much longer than our B2B branch.
@@ -225,7 +225,7 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 						especially since we also had programs that were online.
 					</li>
 				</ul>
-				<p><strong>The takeaway</strong></p>
+				<h4>The takeaway</h4>
 				<p>
 					Given that the above issues were encountered and flagged multiple times in my research, my hypothesis
 					was this: creating a clearer path from the B2C side of the site to the B2B side would result in higher
@@ -380,11 +380,12 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 		padding: var(--space-padding-large);
 	}
 
-	.summary h2 {
+	.summary h3 {
 		margin: 0;
 		font-family: var(--font-display);
 		font-size: var(--text-h2);
 		font-weight: 500;
+		color: var(--color-dark-gray);
 	}
 
 	.summary p {
