@@ -228,14 +228,17 @@ p {
    from landing flush against the sticky site header. Values track
    SiteHeader.astro's own height at each of its breakpoints (124/150/170px)
    plus a bit of breathing room — SiteHeader doesn't expose its height as a
-   variable, so these are kept in sync by hand. */
+   variable, so these are kept in sync by hand. Below 1024px, CaseStudyNav's
+   mobile dropdown bar (~53px/59px tall at these two tiers) is *also* sticky
+   right under the header, so those two tiers get that height added on top
+   — otherwise headings land underneath the bar instead of just the header. */
 .case-study-anchor {
-  scroll-margin-top: 140px;
+  scroll-margin-top: 200px;
 }
 
 @media (min-width: 600px) {
   .case-study-anchor {
-    scroll-margin-top: 166px;
+    scroll-margin-top: 230px;
   }
 }
 
