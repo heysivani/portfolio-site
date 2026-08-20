@@ -59,10 +59,11 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 				</div>
 			</section>
 
-			<SectionHeading text="Summary" />
+			<SectionHeading text="Summary" topPadded tinted />
 
-			<section class="summary">
-				<h3>Context</h3>
+			<section class="full-bleed summary">
+				<div class="summary__inner">
+					<h3>Context</h3>
 				<p>
 					My company's main product: B2B and B2C technical training programs for upskilling or career-switching
 					adults to learn software engineering, product design, and product management.
@@ -109,9 +110,10 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 					a success: we now had a significantly higher number of users landing on our B2B pages, and many clicks
 					on our new B2C → B2B navigation link.
 				</p>
+				</div>
 			</section>
 
-			<SectionHeading text="Deep dive" />
+			<SectionHeading text="Deep dive" topPadded />
 
 			<CaseStudyBlock title="Context">
 				<h4>The company</h4>
@@ -405,9 +407,19 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 	}
 
 	.summary {
+		background-color: var(--color-grayish-cream);
+	}
+
+	:global([data-theme='dark']) .summary {
+		background-color: var(--color-purplish-gray);
+	}
+
+	.summary__inner {
 		display: flex;
 		flex-direction: column;
 		gap: var(--space-padding-medium);
+		max-width: var(--content-max-width);
+		margin: 0 auto;
 		padding: var(--space-padding-large);
 	}
 

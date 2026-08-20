@@ -30,3 +30,17 @@ const {
 		<slot />
 	</body>
 </html>
+
+<script>
+	// 100vw includes the scrollbar's width, but percentage-based layout
+	// doesn't — so full-bleed elements using 100vw (see .full-bleed in
+	// global.css) drift a few pixels off-center whenever a vertical
+	// scrollbar is present. clientWidth excludes it, giving the true
+	// visible width to break out to.
+	const setViewportWidth = () => {
+		document.documentElement.style.setProperty('--viewport-width', `${document.documentElement.clientWidth}px`);
+	};
+
+	setViewportWidth();
+	window.addEventListener('resize', setViewportWidth);
+</script>
