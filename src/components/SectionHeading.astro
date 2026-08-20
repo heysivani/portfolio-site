@@ -34,8 +34,10 @@ const triangles = [0, 1, 2];
 	const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 	if (headings.length > 0 && !reduceMotion) {
-		// light-green -> medium-green, matching --color-light-green / --color-medium-green
-		const fromColor = [213, 238, 216];
+		// light-green -> medium-green in light mode, light-purple -> medium-green in dark
+		// mode, matching --color-light-green/--color-light-purple / --color-medium-green
+		const fromColorLight = [213, 238, 216];
+		const fromColorDark = [88, 78, 94];
 		const toColor = [83, 196, 156];
 
 		const trackers = Array.from(headings).map((heading) => {
@@ -62,6 +64,7 @@ const triangles = [0, 1, 2];
 				const progress = window.scrollY <= 0 ? 0 : Math.max(0, Math.min(1, (triggerLine - rect.top) / rampDistance));
 				heading.style.setProperty('--arrow-progress', progress.toFixed(3));
 
+				const fromColor = document.documentElement.dataset.theme === 'dark' ? fromColorDark : fromColorLight;
 				const [r, g, b] = fromColor.map((from, i) => Math.round(from + (toColor[i] - from) * progress));
 				heading.style.setProperty('--arrow-color', `rgb(${r}, ${g}, ${b})`);
 			};
@@ -91,6 +94,13 @@ const triangles = [0, 1, 2];
 		onResize();
 		window.addEventListener('scroll', onScroll, { passive: true });
 		window.addEventListener('resize', onResize);
+
+		// Re-run so a theme toggle mid-session (no scroll involved) still picks
+		// up the light/dark from-color immediately.
+		new MutationObserver(() => trackers.forEach((t) => t.updateProgress())).observe(document.documentElement, {
+			attributes: true,
+			attributeFilter: ['data-theme'],
+		});
 	}
 </script>
 
@@ -103,6 +113,10 @@ const triangles = [0, 1, 2];
 		justify-content: center;
 		gap: var(--space-large);
 		padding: var(--space-padding-medium) var(--space-padding-large);
+	}
+
+	:global([data-theme='dark']) .section-heading {
+		--arrow-color: var(--color-light-purple);
 	}
 
 	h2 {

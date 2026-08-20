@@ -6,6 +6,7 @@
   --color-light-grey: #7c7084;
   --color-light-purple: #f5e5ff;
   --color-medium-purple: #c894e9;
+  --color-dark-purple: #463150;
   --color-medium-green: #53c49c;
   --color-light-green: #d5eed8;
 
@@ -45,7 +46,6 @@
   --color-light-grey: #b0a1b9;
   --color-light-purple: #584e5e;
   --color-light-green: #252c2a;
-  --color-dark-purple: #463150;
 }
 
 *,

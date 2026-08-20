@@ -70,9 +70,11 @@ const abilities = ['Design', 'Writing', 'Coding'];
 		let triggerLine = 0;
 		let rampDistance = 1;
 
-		// medium-green -> light-green, matching --color-medium-green / --color-light-green
+		// medium-green -> light-green in light mode, medium-green -> dark-purple in dark
+		// mode, matching --color-medium-green / --color-light-green/--color-dark-purple
 		const fromColor = [83, 196, 156];
-		const toColor = [213, 238, 216];
+		const toColorLight = [213, 238, 216];
+		const toColorDark = [70, 49, 80];
 
 		const measure = () => {
 			// Animation doesn't start until the triangles have scrolled up past a
@@ -90,6 +92,7 @@ const abilities = ['Design', 'Writing', 'Coding'];
 			const progress = window.scrollY <= 0 ? 0 : Math.max(0, Math.min(1, (triggerLine - rect.top) / rampDistance));
 			abilities.style.setProperty('--ability-progress', progress.toFixed(3));
 
+			const toColor = document.documentElement.dataset.theme === 'dark' ? toColorDark : toColorLight;
 			const [r, g, b] = fromColor.map((from, i) => Math.round(from + (toColor[i] - from) * progress));
 			abilities.style.setProperty('--ability-color', `rgb(${r}, ${g}, ${b})`);
 
@@ -112,6 +115,13 @@ const abilities = ['Design', 'Writing', 'Coding'];
 		window.addEventListener('scroll', onScroll, { passive: true });
 		window.addEventListener('resize', onResize);
 		updateProgress();
+
+		// Re-run so a theme toggle mid-session (no scroll involved) still picks
+		// up the light/dark to-color immediately.
+		new MutationObserver(updateProgress).observe(document.documentElement, {
+			attributes: true,
+			attributeFilter: ['data-theme'],
+		});
 	}
 
 	const photo = document.querySelector('.photo');
@@ -539,6 +549,12 @@ const abilities = ['Design', 'Writing', 'Coding'];
 		.abilities {
 			--ability-progress: 1;
 			--ability-color: var(--color-light-green);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		:global([data-theme='dark']) .abilities {
+			--ability-color: var(--color-dark-purple);
 		}
 	}
 
