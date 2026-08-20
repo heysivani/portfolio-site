@@ -8,7 +8,7 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 
 <BaseLayout
 	title="Finding the “why” behind slides | sivani.me"
-	description="UX research to evaluate instructional materials. Resulted in higher quality curriculum materials used across our B2B enterprise and B2C programs, more efficient time allocation for curriculum creators, and a higher level of design maturity within our organization."
+	description="UX research to evaluate instructional materials. Higher quality curriculum materials used across our B2B enterprise and B2C programs, more efficient time allocation for curriculum creators, and a higher level of design maturity within our organization."
 >
 	<SiteHeader />
 	<div class="content">
@@ -36,11 +36,20 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 						<img src="/images/finding-the-why-behind-slides/project-1-title.svg" alt="" />
 					</div>
 					<hr />
-					<p>
-						UX research to evaluate instructional materials. Resulted in higher quality curriculum materials used
-						across our B2B enterprise and B2C programs, more efficient time allocation for curriculum creators, and
-						a higher level of design maturity within our organization.
-					</p>
+					<div class="hero__action-impact">
+						<div class="hero__group">
+							<p class="hero__label">Action</p>
+							<p>UX research to evaluate instructional materials.</p>
+						</div>
+						<div class="hero__group">
+							<p class="hero__label">Impact</p>
+							<p>
+								Higher quality curriculum materials used across our B2B enterprise and B2C programs, more efficient
+								time allocation for curriculum creators, and a higher level of design maturity within our
+								organization.
+							</p>
+						</div>
+					</div>
 					<hr />
 					<p class="hero__skills">
 						<strong>Skills:</strong> user interviews, stakeholder interviews, usability tests, survey design, heuristic
@@ -403,6 +412,25 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 		margin: 0;
 		font-size: var(--text-body);
 		line-height: 1.5;
+	}
+
+	.hero__action-impact {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-large);
+	}
+
+	.hero__group {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-tiny);
+	}
+
+	.hero__body p.hero__label {
+		font-family: var(--font-display);
+		font-size: var(--text-h2);
+		font-weight: 500;
+		color: var(--color-dark-gray);
 	}
 
 	.hero__skills,

@@ -8,7 +8,7 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 
 <BaseLayout
 	title="Increasing B2B traffic: The power of navigation | sivani.me"
-	description="Identified a critical discoverability issue that was limiting our B2B traffic. Updates resulted in a higher average scroll percentage and a higher average number of clicks on our redesigned pages. A navigation improvement increased traffic to our B2B pages."
+	description="Redesigned navigation, designed new pages, and updated B2B design system to align with new branding. Higher traffic to our B2B pages, and better engagement (scroll percentage and clicks)."
 >
 	<SiteHeader />
 	<div class="content">
@@ -36,11 +36,16 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 						<img src="/images/increasing-b2b-traffic-the-power-of-navigation/project-2-title.svg" alt="" />
 					</div>
 					<hr />
-					<p>
-						Identified a critical discoverability issue that was limiting our B2B traffic. Updates resulted in a
-						higher average scroll percentage and a higher average number of clicks on our redesigned pages. A
-						navigation improvement increased traffic to our B2B pages.
-					</p>
+					<div class="hero__action-impact">
+						<div class="hero__group">
+							<p class="hero__label">Action</p>
+							<p>Redesigned navigation, designed new pages, and updated B2B design system to align with new branding.</p>
+						</div>
+						<div class="hero__group">
+							<p class="hero__label">Impact</p>
+							<p>Higher traffic to our B2B pages, and better engagement (scroll percentage and clicks).</p>
+						</div>
+					</div>
 					<hr />
 					<p class="hero__skills">
 						<strong>Skills:</strong> heuristic evaluation, competitive analysis, workshop facilitation, stakeholder
@@ -365,6 +370,25 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 		margin: 0;
 		font-size: var(--text-body);
 		line-height: 1.5;
+	}
+
+	.hero__action-impact {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-large);
+	}
+
+	.hero__group {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-tiny);
+	}
+
+	.hero__body p.hero__label {
+		font-family: var(--font-display);
+		font-size: var(--text-h2);
+		font-weight: 500;
+		color: var(--color-dark-gray);
 	}
 
 	.hero__skills,

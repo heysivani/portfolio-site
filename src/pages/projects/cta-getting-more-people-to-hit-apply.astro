@@ -8,7 +8,7 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 
 <BaseLayout
 	title="CTA: Getting more people to hit apply | sivani.me"
-	description="Discovered critical issues that prevented prospective students from applying to our programs. Updates resulted in an increase in apply button clicks and submissions of the application form, and reduced confusion from prospective students about basic program details like cost and the admissions process."
+	description="Resolved critical issues that prevented prospective students from applying to our programs. More apply button clicks and submissions of the application form, and less confusion from prospective students about basic program details."
 >
 	<SiteHeader />
 	<div class="content">
@@ -36,11 +36,19 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 						<img src="/images/cta-getting-more-people-to-hit-apply/project-3-title.svg" alt="" />
 					</div>
 					<hr />
-					<p>
-						Discovered critical issues that prevented prospective students from applying to our programs. Updates
-						resulted in an increase in apply button clicks and submissions of the application form, and reduced
-						confusion from prospective students about basic program details like cost and the admissions process.
-					</p>
+					<div class="hero__action-impact">
+						<div class="hero__group">
+							<p class="hero__label">Action</p>
+							<p>Resolved critical issues that prevented prospective students from applying to our programs.</p>
+						</div>
+						<div class="hero__group">
+							<p class="hero__label">Impact</p>
+							<p>
+								More apply button clicks and submissions of the application form, and less confusion from
+								prospective students about basic program details.
+							</p>
+						</div>
+					</div>
 					<hr />
 					<p class="hero__skills">
 						<strong>Skills:</strong> heuristic evaluation, competitive analysis, workshop facilitation, stakeholder
@@ -332,6 +340,25 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 		margin: 0;
 		font-size: var(--text-body);
 		line-height: 1.5;
+	}
+
+	.hero__action-impact {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-large);
+	}
+
+	.hero__group {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-tiny);
+	}
+
+	.hero__body p.hero__label {
+		font-family: var(--font-display);
+		font-size: var(--text-h2);
+		font-weight: 500;
+		color: var(--color-dark-gray);
 	}
 
 	.hero__skills,
