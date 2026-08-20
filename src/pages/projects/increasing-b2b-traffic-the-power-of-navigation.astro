@@ -4,6 +4,7 @@ import SiteHeader from '../../components/SiteHeader.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
 import SectionHeading from '../../components/SectionHeading.astro';
 import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
+import CaseStudyNav from '../../components/CaseStudyNav.astro';
 ---
 
 <BaseLayout
@@ -13,7 +14,10 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 	<SiteHeader />
 	<div class="content">
 		<main>
-			<section class="hero">
+			<div class="case-study-body">
+				<CaseStudyNav />
+
+				<section id="top" class="hero case-study-anchor">
 				<a class="back-link" href="/">
 					<svg viewBox="0 0 17 17" width="17" height="17" xmlns="http://www.w3.org/2000/svg">
 						<path
@@ -61,7 +65,7 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 				</div>
 			</section>
 
-			<SectionHeading text="Summary" topPadded tinted />
+			<SectionHeading text="Summary" id="summary" topPadded tinted />
 
 			<section class="full-bleed summary">
 				<div class="summary__inner">
@@ -115,9 +119,9 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 				</div>
 			</section>
 
-			<SectionHeading text="Deep dive" topPadded />
+			<SectionHeading text="Deep dive" id="deep-dive" topPadded />
 
-			<CaseStudyBlock title="Context">
+			<CaseStudyBlock title="Context" id="context">
 				<h4>The company</h4>
 				<p>
 					My company's main product: B2B and B2C technical training programs for upskilling or career-switching
@@ -167,7 +171,7 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 				<p>I needed to figure out why this gap existed, and how to close it.</p>
 			</CaseStudyBlock>
 
-			<CaseStudyBlock title="Process">
+			<CaseStudyBlock title="Process" id="process">
 				<h4>Research and data analysis</h4>
 				<ul>
 					<li>Competitive analysis workshop</li>
@@ -193,7 +197,7 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 				</ul>
 			</CaseStudyBlock>
 
-			<CaseStudyBlock title="Key insights">
+			<CaseStudyBlock title="Key insights" id="key-insights">
 				<h4>What we learned</h4>
 				<p>
 					The research surfaced a discoverability problem: our B2C site was the default homepage and outranked B2B
@@ -242,7 +246,7 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 				</p>
 			</CaseStudyBlock>
 
-			<CaseStudyBlock title="Solutions">
+			<CaseStudyBlock title="Solutions" id="solutions">
 				<p>The language/business toggle needed to be redesigned.</p>
 				<p>
 					The first step was talking to the B2C and B2B Marketing teams about making their content available in
@@ -284,7 +288,7 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 				</p>
 			</CaseStudyBlock>
 
-			<CaseStudyBlock title="Impact">
+			<CaseStudyBlock title="Impact" id="impact">
 				<p>
 					The B2B Marketing Manager and I reviewed our website analytics in the months that followed these
 					updates, and noted a higher average scroll percentage and a higher average number of clicks on our
@@ -296,6 +300,7 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 					navigation link.
 				</p>
 			</CaseStudyBlock>
+			</div>
 
 			<div class="cta-wrap">
 				<a class="cta-button" href="/">&larr; Home</a>
@@ -327,6 +332,13 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 
 	.back-link:hover {
 		color: var(--color-medium-green);
+	}
+
+	/* Positioning context for CaseStudyNav's sticky-anchor trick (see that
+	   component) — its 0x0 anchor sits as the first child here, so its
+	   flow-start position lines up with the Summary heading right after it. */
+	.case-study-body {
+		position: relative;
 	}
 
 	.hero__body {
@@ -510,14 +522,14 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 	}
 
 	.cta-wrap {
-		padding: 0 var(--space-padding-large) var(--space-padding-large);
+		padding: var(--space-padding-large) var(--space-padding-large) calc(var(--space-padding-large) * 2);
 	}
 
 	.cta-button {
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		height: 33px;
+		height: 50px;
 		border: 1px solid var(--color-dark-gray);
 		border-radius: 18px;
 		background-color: var(--color-light-purple);

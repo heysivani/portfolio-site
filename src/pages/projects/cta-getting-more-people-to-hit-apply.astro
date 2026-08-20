@@ -4,6 +4,7 @@ import SiteHeader from '../../components/SiteHeader.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
 import SectionHeading from '../../components/SectionHeading.astro';
 import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
+import CaseStudyNav from '../../components/CaseStudyNav.astro';
 ---
 
 <BaseLayout
@@ -13,7 +14,10 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 	<SiteHeader />
 	<div class="content">
 		<main>
-			<section class="hero">
+			<div class="case-study-body">
+				<CaseStudyNav />
+
+				<section id="top" class="hero case-study-anchor">
 				<a class="back-link" href="/">
 					<svg viewBox="0 0 17 17" width="17" height="17" xmlns="http://www.w3.org/2000/svg">
 						<path
@@ -64,7 +68,7 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 				</div>
 			</section>
 
-			<SectionHeading text="Summary" topPadded tinted />
+			<SectionHeading text="Summary" id="summary" topPadded tinted />
 
 			<section class="full-bleed summary">
 				<div class="summary__inner">
@@ -125,9 +129,9 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 				</div>
 			</section>
 
-			<SectionHeading text="Deep dive" topPadded />
+			<SectionHeading text="Deep dive" id="deep-dive" topPadded />
 
-			<CaseStudyBlock title="Context">
+			<CaseStudyBlock title="Context" id="context">
 				<h4>The company</h4>
 				<p>
 					My company's main product: B2B and B2C technical training programs for upskilling or career-switching
@@ -173,7 +177,7 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 				</p>
 			</CaseStudyBlock>
 
-			<CaseStudyBlock title="Process">
+			<CaseStudyBlock title="Process" id="process">
 				<div class="case-study-block__image">
 					<img src="/images/cta-getting-more-people-to-hit-apply/project-3-process.svg" alt="" />
 				</div>
@@ -197,7 +201,7 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 				</ul>
 			</CaseStudyBlock>
 
-			<CaseStudyBlock title="Key insights">
+			<CaseStudyBlock title="Key insights" id="key-insights">
 				<p>
 					The research uncovered 95 unique issues. Roughly 28% of these issues were classified as
 					"mission-critical" i.e. issues that could make-or-break whether a visitor ever made it to our program
@@ -226,7 +230,7 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 				</div>
 			</CaseStudyBlock>
 
-			<CaseStudyBlock title="Solutions">
+			<CaseStudyBlock title="Solutions" id="solutions">
 				<p>
 					To address the most critical issues affecting the application pipeline, I designed and implemented
 					multiple changes across the B2C site. Below are some of the highlights.
@@ -258,7 +262,7 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 				</ul>
 			</CaseStudyBlock>
 
-			<CaseStudyBlock title="Impact">
+			<CaseStudyBlock title="Impact" id="impact">
 				<p>
 					Following these changes, we observed an increase in apply button clicks and submissions of the
 					application form via our analytics platforms – meaning more potential students were entering the
@@ -266,6 +270,7 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 					students about basic program details like cost, the admissions timeline, and how to apply.
 				</p>
 			</CaseStudyBlock>
+			</div>
 
 			<div class="cta-wrap">
 				<a class="cta-button" href="/">&larr; Home</a>
@@ -297,6 +302,13 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 
 	.back-link:hover {
 		color: var(--color-medium-green);
+	}
+
+	/* Positioning context for CaseStudyNav's sticky-anchor trick (see that
+	   component) — its 0x0 anchor sits as the first child here, so its
+	   flow-start position lines up with the Summary heading right after it. */
+	.case-study-body {
+		position: relative;
 	}
 
 	.hero__body {
@@ -481,14 +493,14 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 	}
 
 	.cta-wrap {
-		padding: 0 var(--space-padding-large) var(--space-padding-large);
+		padding: var(--space-padding-large) var(--space-padding-large) calc(var(--space-padding-large) * 2);
 	}
 
 	.cta-button {
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		height: 33px;
+		height: 50px;
 		border: 1px solid var(--color-dark-gray);
 		border-radius: 18px;
 		background-color: var(--color-light-purple);

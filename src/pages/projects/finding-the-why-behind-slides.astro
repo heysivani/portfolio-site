@@ -4,6 +4,7 @@ import SiteHeader from '../../components/SiteHeader.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
 import SectionHeading from '../../components/SectionHeading.astro';
 import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
+import CaseStudyNav from '../../components/CaseStudyNav.astro';
 ---
 
 <BaseLayout
@@ -13,7 +14,10 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 	<SiteHeader />
 	<div class="content">
 		<main>
-			<section class="hero">
+			<div class="case-study-body">
+				<CaseStudyNav />
+
+				<section id="top" class="hero case-study-anchor">
 				<a class="back-link" href="/">
 					<svg viewBox="0 0 17 17" width="17" height="17" xmlns="http://www.w3.org/2000/svg">
 						<path
@@ -65,7 +69,7 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 				</div>
 			</section>
 
-			<SectionHeading text="Summary" topPadded tinted />
+			<SectionHeading text="Summary" id="summary" topPadded tinted />
 
 			<section class="full-bleed summary">
 				<div class="summary__inner">
@@ -118,9 +122,9 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 				</div>
 			</section>
 
-			<SectionHeading text="Deep dive" topPadded />
+			<SectionHeading text="Deep dive" id="deep-dive" topPadded />
 
-			<CaseStudyBlock title="Context">
+			<CaseStudyBlock title="Context" id="context">
 				<div class="case-study-block__image">
 					<img src="/images/finding-the-why-behind-slides/project-1-context.svg" alt="" />
 				</div>
@@ -178,7 +182,7 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 				<p>It was time to test these assumptions.</p>
 			</CaseStudyBlock>
 
-			<CaseStudyBlock title="Process">
+			<CaseStudyBlock title="Process" id="process">
 				<h4>Research and data analysis</h4>
 				<p>
 					I combined a variety of research methods to collect a mix of quantitative and qualitative data, and
@@ -222,7 +226,7 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 				</ul>
 			</CaseStudyBlock>
 
-			<CaseStudyBlock title="Key insights">
+			<CaseStudyBlock title="Key insights" id="key-insights">
 				<h4>What we learned</h4>
 				<p>The findings confirmed my team's first assumption was correct: slide decks were, indeed, important.</p>
 				<p>
@@ -265,7 +269,7 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 				</p>
 			</CaseStudyBlock>
 
-			<CaseStudyBlock title="Solutions">
+			<CaseStudyBlock title="Solutions" id="solutions">
 				<p>After I shared these insights with my team, we discussed and evaluated them together.</p>
 				<p>Next, I led a design workshop. Here, we identified:</p>
 				<ul>
@@ -305,7 +309,7 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 				</p>
 			</CaseStudyBlock>
 
-			<CaseStudyBlock title="Impact">
+			<CaseStudyBlock title="Impact" id="impact">
 				<h4>What did we gain from all this?</h4>
 				<p>
 					I was able to observe several positive changes myself, and through direct feedback from my team, my
@@ -338,6 +342,7 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 					furthered one of our annual company objectives: to be more data-driven.
 				</p>
 			</CaseStudyBlock>
+			</div>
 
 			<div class="cta-wrap">
 				<a class="cta-button" href="/">&larr; Home</a>
@@ -369,6 +374,13 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 
 	.back-link:hover {
 		color: var(--color-medium-green);
+	}
+
+	/* Positioning context for CaseStudyNav's sticky-anchor trick (see that
+	   component) — its 0x0 anchor sits as the first child here, so its
+	   flow-start position lines up with the Summary heading right after it. */
+	.case-study-body {
+		position: relative;
 	}
 
 	.hero__body {
@@ -552,14 +564,14 @@ import CaseStudyBlock from '../../components/CaseStudyBlock.astro';
 	}
 
 	.cta-wrap {
-		padding: 0 var(--space-padding-large) var(--space-padding-large);
+		padding: var(--space-padding-large) var(--space-padding-large) calc(var(--space-padding-large) * 2);
 	}
 
 	.cta-button {
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		height: 33px;
+		height: 50px;
 		border: 1px solid var(--color-dark-gray);
 		border-radius: 18px;
 		background-color: var(--color-light-purple);

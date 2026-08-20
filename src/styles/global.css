@@ -72,6 +72,15 @@ body {
   padding: 0;
 }
 
+/* Smooth in-page scrolling for anchor jumps (case study nav links, any other
+   #fragment link) — opted out for reduced-motion so it doesn't override that
+   preference. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
 body {
   display: flex;
   flex-direction: column;
@@ -212,5 +221,26 @@ p {
 @media (min-width: 1920px) {
   :root {
     --content-max-width: 940px;
+  }
+}
+
+/* Keeps anchor-jump targets (case study nav links, direct #fragment URLs)
+   from landing flush against the sticky site header. Values track
+   SiteHeader.astro's own height at each of its breakpoints (124/150/170px)
+   plus a bit of breathing room — SiteHeader doesn't expose its height as a
+   variable, so these are kept in sync by hand. */
+.case-study-anchor {
+  scroll-margin-top: 140px;
+}
+
+@media (min-width: 600px) {
+  .case-study-anchor {
+    scroll-margin-top: 166px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .case-study-anchor {
+    scroll-margin-top: 190px;
   }
 }

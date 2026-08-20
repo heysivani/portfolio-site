@@ -1,0 +1,289 @@
+---
+const topLevelSections = [
+	{ id: 'top', label: 'Top' },
+	{ id: 'summary', label: 'Summary' },
+];
+
+const deepDiveSections = [
+	{ id: 'context', label: 'Context' },
+	{ id: 'process', label: 'Process' },
+	{ id: 'key-insights', label: 'Key insights' },
+	{ id: 'solutions', label: 'Solutions' },
+	{ id: 'impact', label: 'Impact' },
+];
+---
+
+<!--
+	Zero-size sticky-anchor trick: this element takes no space in the
+	document flow (width/height: 0) so it doesn't push the Summary heading
+	(its next sibling in the page) down or add a gap above it — it just
+	marks the exact vertical point ("top-aligned with Summary's title") that
+	position: sticky measures from. The actual visible nav is an absolutely
+	positioned child, offset left into the page's margin, which is free to
+	overflow this 0x0 box since overflow isn't clipped here.
+-->
+<div class="case-study-nav">
+	<nav class="case-study-nav__inner" aria-label="Case study sections">
+		<svg class="case-study-nav__marker" viewBox="0 0 12 14" aria-hidden="true">
+			<path d="M0 0 L12 7 L0 14 Z" />
+		</svg>
+		<p class="case-study-nav__title">Table of Contents</p>
+		<ul class="case-study-nav__list">
+			{
+				topLevelSections.map((section) => (
+					<li>
+						<a href={`#${section.id}`} data-nav-id={section.id}>
+							{section.label}
+						</a>
+					</li>
+				))
+			}
+			<li>
+				<a href="#deep-dive" data-nav-id="deep-dive">
+					Deep dive
+				</a>
+				<ul class="case-study-nav__sublist">
+					{
+						deepDiveSections.map((section) => (
+							<li>
+								<a href={`#${section.id}`} data-nav-id={section.id} data-nav-group="deep-dive">
+									{section.label}
+								</a>
+							</li>
+						))
+					}
+				</ul>
+			</li>
+		</ul>
+	</nav>
+</div>
+
+<script>
+	// Scroll-spy: mirrors the throttled-scroll + measure pattern used in
+	// SectionHeading.astro rather than IntersectionObserver, so the "current
+	// section" logic (last target whose top has crossed the trigger line) is
+	// simple to reason about and stays consistent with the rest of the site.
+	const navEls = document.querySelectorAll('.case-study-nav');
+
+	if (navEls.length > 0) {
+		const targetIds = ['top', 'summary', 'deep-dive', 'context', 'process', 'key-insights', 'solutions', 'impact'];
+
+		navEls.forEach((navEl) => {
+			const inner = navEl.querySelector('.case-study-nav__inner');
+			const marker = navEl.querySelector('.case-study-nav__marker');
+			const links = navEl.querySelectorAll('a[data-nav-id]');
+			if (!inner || !marker) return;
+
+			const targets = targetIds
+				.map((id) => ({ id, el: document.getElementById(id) }))
+				.filter((t) => t.el !== null);
+
+			if (targets.length === 0) return;
+
+			// Matches the nav's own visual row position once stuck (sticky
+			// `top` + __inner's own top offset, see <style> below) plus a
+			// little extra so a section counts as "current" slightly before
+			// it touches the nav's position, not exactly at it.
+			const TRIGGER_LINE = 226;
+
+			// Paints the given id as active (dark text, deep-dive parent
+			// highlighting, marker position) without touching scroll — shared
+			// by the scroll-driven detector below and by clicks, so a click
+			// can move the arrow to its target immediately instead of
+			// waiting for the (possibly long, since scroll-behavior:smooth
+			// takes real time) animated scroll to carry the page there.
+			const applyActive = (activeId) => {
+				const isDeepDiveActive = activeId !== 'top' && activeId !== 'summary';
+				let activeLink = null;
+
+				links.forEach((link) => {
+					const isExact = link.dataset.navId === activeId;
+					const isDeepDiveParent = link.dataset.navId === 'deep-dive';
+					link.classList.toggle('is-active', isExact);
+					link.classList.toggle('is-parent-active', isDeepDiveParent && isDeepDiveActive);
+					if (isExact) activeLink = link;
+				});
+
+				if (activeLink) {
+					const innerRect = inner.getBoundingClientRect();
+					const linkRect = activeLink.getBoundingClientRect();
+					const markerY = linkRect.top - innerRect.top + linkRect.height / 2 - 7;
+					navEl.style.setProperty('--case-study-nav-marker-y', `${markerY}px`);
+				}
+			};
+
+			const detectActiveFromScroll = () => {
+				let activeId = targets[0].id;
+				for (const target of targets) {
+					if (target.el.getBoundingClientRect().top <= TRIGGER_LINE) {
+						activeId = target.id;
+					}
+				}
+				return activeId;
+			};
+
+			let ticking = false;
+			// True while a click's own scroll-into-view animation is still
+			// running: scroll events keep firing throughout that animation,
+			// and without this the scroll-position detector would keep
+			// re-deriving "current section" from wherever the page happens
+			// to be mid-scroll, overwriting the immediate jump below and
+			// reproducing the original lag.
+			let suppressScrollDetection = false;
+			let fallbackClearTimer;
+
+			const update = () => {
+				if (suppressScrollDetection) return;
+				applyActive(detectActiveFromScroll());
+			};
+
+			const clearSuppression = () => {
+				suppressScrollDetection = false;
+				clearTimeout(fallbackClearTimer);
+				update();
+			};
+
+			const onScroll = () => {
+				if (!ticking) {
+					window.requestAnimationFrame(() => {
+						update();
+						ticking = false;
+					});
+					ticking = true;
+				}
+			};
+
+			links.forEach((link) => {
+				link.addEventListener('click', () => {
+					suppressScrollDetection = true;
+					applyActive(link.dataset.navId);
+					// 'scrollend' (widely supported since 2024) is the precise
+					// signal that the browser's own smooth-scroll animation
+					// has settled. The timeout is only a safety net for
+					// browsers without it, or if scrollend never fires for
+					// some reason (e.g. the click's target is already in
+					// view, so no scroll actually happens).
+					clearTimeout(fallbackClearTimer);
+					fallbackClearTimer = setTimeout(clearSuppression, 1000);
+				});
+			});
+
+			window.addEventListener('scrollend', clearSuppression);
+
+			update();
+			window.addEventListener('scroll', onScroll, { passive: true });
+			window.addEventListener('resize', onScroll);
+		});
+	}
+</script>
+
+<style>
+	.case-study-nav {
+		display: none;
+	}
+
+	@media (min-width: 1024px) {
+		.case-study-nav {
+			display: block;
+			position: sticky;
+			/* Matches SiteHeader's own height at this breakpoint exactly (not
+			   header height + extra gap) — this component's flow position
+			   starts at the very top of the page, right at the header's
+			   bottom edge, so any larger threshold would clamp it downward
+			   immediately on load, before any scrolling. __inner below adds
+			   its own offset for breathing room instead, so that offset
+			   applies consistently whether the nav is stuck or not. */
+			top: 170px;
+			width: 0;
+			height: 0;
+			overflow: visible;
+		}
+
+		.case-study-nav__inner {
+			position: absolute;
+			/* Matches the hero section's own padding-top (the "Home" back
+			   link right after this component uses it), so the nav's first
+			   item lines up with the back link itself rather than the top
+			   of its container. */
+			top: var(--space-padding-large);
+			/* Gap between the nav and the content column grows with the
+			   viewport instead of staying fixed: tight against content at
+			   the 1024px floor (where margin space is scarce), drifting
+			   toward the open margin as the screen gets wider (where margin
+			   space is abundant) so it doesn't look stranded right next to
+			   the content on large screens. Floor matches this breakpoint's
+			   own 1024px start; clamp keeps it from drifting past a
+			   reasonable point on ultra-wide screens. */
+			left: calc(-132px - clamp(18px, 18px + (100vw - 1024px) * 0.08, 90px));
+			width: 132px;
+		}
+
+		.case-study-nav__marker {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 10px;
+			height: 14px;
+			transform: translateY(var(--case-study-nav-marker-y, 0px));
+			transition: transform 0.2s ease;
+			fill: var(--color-medium-green);
+		}
+
+		.case-study-nav__title {
+			margin: 0 0 var(--space-small);
+			padding-left: 22px;
+			font-family: var(--font-body);
+			font-size: var(--text-small);
+			font-weight: 700;
+			color: var(--color-dark-gray);
+		}
+
+		.case-study-nav__list {
+			margin: 0;
+			padding: 0;
+			list-style: none;
+			display: flex;
+			flex-direction: column;
+			gap: var(--space-small);
+			padding-left: 22px;
+		}
+
+		.case-study-nav__sublist {
+			margin: var(--space-small) 0 0;
+			padding: 0;
+			list-style: none;
+			display: flex;
+			flex-direction: column;
+			gap: var(--space-small);
+			padding-left: 20px;
+		}
+
+		.case-study-nav__list a {
+			display: block;
+			text-decoration: none;
+			font-family: var(--font-body);
+			font-size: var(--text-small);
+			color: var(--color-light-grey);
+			transition: color 0.2s ease;
+		}
+
+		.case-study-nav__sublist a {
+			font-size: var(--text-small);
+		}
+
+		.case-study-nav__list a:hover {
+			color: var(--color-dark-gray);
+		}
+
+		.case-study-nav__list a.is-parent-active,
+		.case-study-nav__list a.is-active {
+			color: var(--color-dark-gray);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.case-study-nav__marker {
+			transition: none;
+		}
+	}
+</style>
