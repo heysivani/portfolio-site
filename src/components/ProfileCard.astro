@@ -1,7 +1,7 @@
 ---
 import SocialLinks from './SocialLinks.astro';
 
-const abilities = ['UX research', 'UI design', 'Coding'];
+const abilities = ['Design', 'Writing', 'Coding'];
 ---
 
 <div class="profile-card">
@@ -19,10 +19,6 @@ const abilities = ['UX research', 'UI design', 'Coding'];
 			</div>
 			<div class="stats">
 				<div class="stats__info">
-					<div class="stat">
-						<img src="/icons/skull.svg" alt="" width="15" height="14" />
-						<span>Level unknown</span>
-					</div>
 					<div class="stat">
 						<img src="/icons/location.svg" alt="" width="12" height="15" />
 						<span>Tokyo</span>
@@ -58,8 +54,8 @@ const abilities = ['UX research', 'UI design', 'Coding'];
 		</div>
 
 		<p class="bio-text">
-			Full-stack UX + UI product designer powered by a game design degree and a background in coding and ed tech. Values
-			data-driven decisions, clarity, and kindness. Writer of an award-nominated game that has been exhibited worldwide.
+			Full-stack UX/UI product designer powered by a game design degree and a background in coding and ed tech. Writer of
+			an award-nominated game that has been exhibited worldwide. Values data-driven decisions, clarity, and kindness.
 		</p>
 
 		<SocialLinks animate startDelay={0} />
@@ -374,7 +370,7 @@ const abilities = ['UX research', 'UI design', 'Coding'];
 		display: flex;
 		flex-direction: column;
 		gap: var(--space-medium);
-		justify-content: center;
+		justify-content: flex-start;
 	}
 
 	.stats__info {
@@ -390,14 +386,6 @@ const abilities = ['UX research', 'UI design', 'Coding'];
 		font-size: var(--text-micro);
 		color: var(--color-light-grey);
 		animation: pop-in 0.5s ease-out both;
-	}
-
-	.stat:nth-child(1) {
-		animation-delay: 0s;
-	}
-
-	.stat:nth-child(2) {
-		animation-delay: 0.08s;
 	}
 
 	.stat img {
