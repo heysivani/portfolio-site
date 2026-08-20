@@ -30,11 +30,66 @@ const { href, image, title, action, impact, skills } = Astro.props;
 				</div>
 			</div>
 			<hr />
-			<p class="project-card__skills">{skills}</p>
 		</div>
+		<p class="project-card__skills">{skills}</p>
 	</div>
 	<div class="project-card__cta">View project &rarr;</div>
 </a>
+
+<script>
+	// Keeps .project-card__image's height matched to .project-card__details'
+	// rendered height at desktop (so the image's bottom edge lines up with
+	// the divider closing out that column), with width following from
+	// aspect-ratio so it scales up uniformly instead of distorting. Mirrors
+	// ProfileCard's photo/stats height sync — .details must stay off the
+	// grid row's default stretch (see align-self:start in the stylesheet)
+	// so its rendered height always reflects its own content, never
+	// .image's last-set height.
+	//
+	// Unlike the profile card, one pass isn't enough here: .image's WIDTH
+	// (derived from the height we're about to set) eats into .details'
+	// available width via the grid's 1fr column, which can reflow its text
+	// onto a different number of lines and change ITS height too — so each
+	// guess is re-measured and corrected a few more times until it stops
+	// moving, instead of trusting the first measurement.
+	const ASPECT_RATIO = 244 / 195;
+	const MAX_ITERATIONS = 5;
+
+	document.querySelectorAll('.project-card').forEach((card) => {
+		const image = card.querySelector('.project-card__image');
+		const details = card.querySelector('.project-card__details');
+
+		if (!(image instanceof HTMLElement) || !(details instanceof HTMLElement)) {
+			return;
+		}
+
+		const syncImageSize = () => {
+			const isDesktop = window.matchMedia('(min-width: 1024px)').matches;
+
+			if (!isDesktop) {
+				image.style.height = '';
+				image.style.width = '';
+				return;
+			}
+
+			image.style.height = '';
+			image.style.width = '';
+			let height = details.getBoundingClientRect().height;
+
+			for (let i = 0; i < MAX_ITERATIONS; i++) {
+				image.style.height = `${height}px`;
+				image.style.width = `${height * ASPECT_RATIO}px`;
+
+				const nextHeight = details.getBoundingClientRect().height;
+				if (nextHeight === height) break;
+				height = nextHeight;
+			}
+		};
+
+		syncImageSize();
+		new ResizeObserver(syncImageSize).observe(details);
+	});
+</script>
 
 <style>
 	.project-card {
@@ -132,6 +187,7 @@ const { href, image, title, action, impact, skills } = Astro.props;
 	}
 
 	.project-card__skills {
+		order: 4;
 		font-size: var(--text-micro);
 		color: var(--color-light-grey);
 	}
@@ -154,18 +210,20 @@ const { href, image, title, action, impact, skills } = Astro.props;
 	}
 
 	/* Desktop-only restructure (per Figma node 4273:371): the title moves to
-	   its own full-width row above the image, and the image sits beside the
-	   action/impact/skills details instead of stacking above them. Below
-	   1024px (including the 600px tablet tier) is untouched — same elements,
-	   same DOM order, just a grid instead of the ordered flex column above
-	   this point. */
+	   its own full-width row above the image, the image becomes a fixed-size
+	   thumbnail (not a full-height banner) sitting beside the action/impact
+	   details, and the skills line drops out of that details column to its
+	   own full-width row below both. Below 1024px (including the 600px
+	   tablet tier) is untouched — same elements, same DOM order, just a grid
+	   instead of the ordered flex column above this point. */
 	@media (min-width: 1024px) {
 		.project-card__body {
 			display: grid;
-			grid-template-columns: 1fr 1fr;
+			grid-template-columns: auto 1fr;
 			grid-template-areas:
 				'title title'
-				'image details';
+				'image details'
+				'skills skills';
 			gap: var(--space-large);
 		}
 
@@ -175,12 +233,33 @@ const { href, image, title, action, impact, skills } = Astro.props;
 
 		.project-card__image {
 			grid-area: image;
-			aspect-ratio: unset;
-			height: 100%;
+			/* Real sizing is inline, from the script above — .project-card__body
+			   is a grid, and letting height:100%/aspect-ratio drive an "auto"
+			   grid column's width (rather than a definite pixel value the way
+			   the script sets it) produced runaway widths in testing: the
+			   browser's track-sizing pass fed the row's content-driven height
+			   back into the aspect-ratio width calculation before that height
+			   was actually final. This is just the pre-JS/no-JS fallback.
+			   aspect-ratio here (rather than a fixed height) is what makes
+			   object-fit:cover below actually crop correctly if JS doesn't
+			   run. */
+			width: 244px;
+			aspect-ratio: 244 / 195;
 		}
 
 		.project-card__details {
 			grid-area: details;
+			/* Off the grid row's default stretch: the height-sync script
+			   above reads this element's rendered height to size .image, and
+			   if this stretched to match .image in turn, that height would
+			   keep echoing itself back on every resize instead of tracking
+			   this column's real content height. */
+			align-self: start;
+			gap: 10px;
+		}
+
+		.project-card__skills {
+			grid-area: skills;
 		}
 	}
 </style>
