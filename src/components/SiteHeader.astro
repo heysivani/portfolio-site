@@ -1,8 +1,20 @@
 ---
 import ThemeToggle from './ThemeToggle.astro';
+
+interface Props {
+	// Case study pages get a mobile-only sticky TOC bar (CaseStudyNav) right
+	// under the header, in light-purple. This flag makes the header's own
+	// checkerboard fade blend into that same color at the bottom edge below
+	// 1024px, instead of fading to transparent (which would otherwise reveal
+	// whatever page content is scrolling underneath, mid-transition, between
+	// the two sticky bars).
+	caseStudy?: boolean;
+}
+
+const { caseStudy = false }: Props = Astro.props;
 ---
 
-<header class="site-header">
+<header class:list={['site-header', { 'site-header--case-study': caseStudy }]}>
 	<div class="site-header__pattern-wrap">
 		<div class="site-header__pattern"></div>
 	</div>
@@ -102,6 +114,21 @@ import ThemeToggle from './ThemeToggle.astro';
 		top: 0;
 		z-index: 10;
 		overflow: hidden;
+	}
+
+	/* Below 1024px, case-study pages stack CaseStudyNav's light-purple mobile
+	   TOC bar directly under this header. .site-header__pattern's fade (see
+	   below) only fades its own pattern+fill layer to transparent — without
+	   an opaque color underneath, that transparency would reveal whatever
+	   page content is mid-scroll behind the sticky header instead of a clean
+	   blend into the bar. Filling the header itself with the same
+	   light-purple gives the fade something solid to reveal instead.
+	   Desktop (≥1024px) never gets this — the mobile TOC bar doesn't exist
+	   there, so the header keeps its normal cream fade. */
+	@media (max-width: 1023.98px) {
+		.site-header.site-header--case-study {
+			background-color: var(--color-light-purple);
+		}
 	}
 
 	/* :global since ThemeToggle.astro scopes its own root class — positioned
