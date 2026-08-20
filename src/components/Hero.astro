@@ -14,7 +14,15 @@ import ProfileCard from './ProfileCard.astro';
 					</span></span
 				>
 				<br /><br />
-				I'm a designer, writer, and developer.
+				<span class="hero-line2">I'm a</span> <br
+					class="line-break"
+				/><span class="hero-line3">designer,</span> <br
+					class="line-break"
+				/><span class="hero-line4">writer, and</span> <br
+					class="line-break"
+				/><span class="hero-line5">creative developer</span> <br
+					class="line-break"
+				/><span class="hero-line6">living in Tokyo.</span>
 			</h1>
 		</div>
 	</div>
@@ -28,6 +36,9 @@ import ProfileCard from './ProfileCard.astro';
 	const headline = document.querySelector('.hero__headline');
 	const headlineInner = document.querySelector('.headline');
 	const line1 = document.querySelector('.hero-line1');
+	const lines = document.querySelectorAll(
+		'.hero-line1, .hero-line2, .hero-line3, .hero-line4, .hero-line5, .hero-line6'
+	);
 	const h1 = document.querySelector('.headline h1');
 	const romaji = document.querySelector('.romaji');
 	const card = document.querySelector('.hero__card');
@@ -44,16 +55,18 @@ import ProfileCard from './ProfileCard.astro';
 		const MIN_SIZE = 24;
 		const MAX_SIZE = 72;
 
-		// Keeps "Hi! I'm Sivani" (see .hero-line1's white-space:nowrap below) on
-		// one line at desktop by shrinking the whole heading's font-size to fit,
-		// rather than letting it wrap, then nudges the whole headline block up
-		// or down so the romaji label's top edge lines up with the card's top
-		// edge — without changing anything about the headline's own internal
-		// spacing. Both measurements reset the thing they're about to
-		// recompute first (font-size, then the alignment transform) instead of
-		// building on the previous run's output — sizing/positioning off your
-		// own last result is circular, the same trap the profile-photo height
-		// sync elsewhere on this page had to avoid.
+		// Keeps every nowrap line in the headline (see .hero-line1–6's
+		// white-space:nowrap below — "Hi! I'm Sivani", "I'm a", "designer,",
+		// "writer, and", "creative developer", "living in Tokyo.") on its own
+		// single line at desktop by shrinking the whole heading's font-size to fit the
+		// widest of them, rather than letting any wrap, then nudges the whole
+		// headline block up or down so the romaji label's top edge lines up
+		// with the card's top edge — without changing anything about the
+		// headline's own internal spacing. Both measurements reset the thing
+		// they're about to recompute first (font-size, then the alignment
+		// transform) instead of building on the previous run's output — sizing/
+		// positioning off your own last result is circular, the same trap the
+		// profile-photo height sync elsewhere on this page had to avoid.
 		const fitHeadline = () => {
 			const isDesktop = window.matchMedia('(min-width: 1280px)').matches;
 
@@ -64,7 +77,9 @@ import ProfileCard from './ProfileCard.astro';
 			}
 
 			h1.style.fontSize = `${REFERENCE_SIZE}px`;
-			const naturalWidth = line1.getBoundingClientRect().width;
+			const naturalWidth = Math.max(
+				...Array.from(lines).map((line) => line.getBoundingClientRect().width)
+			);
 			const availableWidth = headline.getBoundingClientRect().width;
 			const fitSize = (availableWidth / naturalWidth) * REFERENCE_SIZE;
 
@@ -94,6 +109,13 @@ import ProfileCard from './ProfileCard.astro';
 		font-size: var(--text-h1);
 		font-weight: 500;
 		line-height: 1.4;
+	}
+
+	/* Below 1280px the second sentence reads as one line ("I'm a designer,
+	   writer, and creative developer living in Tokyo."); the extra breaks
+	   only apply at the desktop tier below. */
+	.line-break {
+		display: none;
 	}
 
 	.name-anchor {
@@ -146,7 +168,7 @@ import ProfileCard from './ProfileCard.astro';
 			grid-template-columns: minmax(0, 1fr) minmax(360px, 420px);
 			grid-template-areas: 'headline card';
 			align-items: start;
-			gap: 100px;
+			gap: 50px;
 		}
 
 		.hero__card {
@@ -166,7 +188,16 @@ import ProfileCard from './ProfileCard.astro';
 			line-height: 1.3;
 		}
 
-		.hero-line1 {
+		.line-break {
+			display: block;
+		}
+
+		.hero-line1,
+		.hero-line2,
+		.hero-line3,
+		.hero-line4,
+		.hero-line5,
+		.hero-line6 {
 			display: inline-block;
 			white-space: nowrap;
 		}
