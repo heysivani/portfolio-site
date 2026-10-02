@@ -18,9 +18,9 @@ import ProfileCard from './ProfileCard.astro';
 					class="line-break"
 				/><span class="hero-line3">designer,</span> <br
 					class="line-break"
-				/><span class="hero-line4">writer, and</span> <br
+				/><span class="hero-line4">educator,</span> <br
 					class="line-break"
-				/><span class="hero-line5">creative developer</span> <br
+				/><span class="hero-line5">and writer</span> <br
 					class="line-break"
 				/><span class="hero-line6">living in Tokyo.</span>
 			</h1>
@@ -57,7 +57,7 @@ import ProfileCard from './ProfileCard.astro';
 
 		// Keeps every nowrap line in the headline (see .hero-line1–6's
 		// white-space:nowrap below — "Hi! I'm Sivani", "I'm a", "designer,",
-		// "writer, and", "creative developer", "living in Tokyo.") on its own
+		// "educator,", "and writer", "living in Tokyo.") on its own
 		// single line at desktop by shrinking the whole heading's font-size to fit the
 		// widest of them, rather than letting any wrap, then nudges the whole
 		// headline block up or down so the romaji label's top edge lines up
@@ -112,7 +112,7 @@ import ProfileCard from './ProfileCard.astro';
 	}
 
 	/* Below 1280px the second sentence reads as one line ("I'm a designer,
-	   writer, and creative developer living in Tokyo."); the extra breaks
+	   educator, and writer living in Tokyo."); the extra breaks
 	   only apply at the desktop tier below. */
 	.line-break {
 		display: none;
